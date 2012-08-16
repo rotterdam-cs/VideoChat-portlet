@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+
+<entity-mappings xmlns="http://java.sun.com/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_1_0.xsd">
+	<persistence-unit-metadata>
+		<xml-mapping-metadata-complete/>
+		<persistence-unit-defaults>
+			<access>PROPERTY</access>
+		</persistence-unit-defaults>
+	</persistence-unit-metadata>
+	<mapped-superclass class="com.rcs.service.model.impl.ChatRoomModelImpl">
+		<attributes>
+			<id name="chatRoomId" />
+			<basic name="groupId" />
+			<basic name="companyId" />
+			<basic name="userId" />
+			<basic name="userName" />
+			<basic name="createDate">
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<basic name="modifiedDate">
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<basic name="sessionId" />
+			<basic name="name" />
+			<basic name="description" />
+			<transient name="primaryKey" />
+			<transient name="primaryKeyObj" />
+			<transient name="userUuid" />
+		</attributes>
+	</mapped-superclass>
+	<mapped-superclass class="com.rcs.service.model.impl.ChatRoomGroupModelImpl">
+		<id-class class="com.rcs.service.service.persistence.ChatRoomGroupPK" />
+		<attributes>
+			<id name="chatRoomId" />
+			<id name="chatRoomGroupId" />
+			<basic name="groupId" />
+			<basic name="companyId" />
+			<basic name="userId" />
+			<basic name="userName" />
+			<basic name="createDate">
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<basic name="modifiedDate">
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<basic name="type">
+				<column name="TYPE_" />
+			</basic>
+			<transient name="primaryKey" />
+			<transient name="primaryKeyObj" />
+			<transient name="userUuid" />
+		</attributes>
+	</mapped-superclass>
+	<mapped-superclass class="com.rcs.service.model.impl.ConfigurationModelImpl">
+		<attributes>
+			<id name="apiKey" />
+			<basic name="groupId" />
+			<basic name="companyId" />
+			<basic name="userId" />
+			<basic name="userName" />
+			<basic name="createDate">
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<basic name="modifiedDate">
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<basic name="apiSecret" />
+			<basic name="type">
+				<column name="TYPE_" />
+			</basic>
+			<transient name="primaryKey" />
+			<transient name="primaryKeyObj" />
+			<transient name="userUuid" />
+		</attributes>
+	</mapped-superclass>
+	<entity class="com.rcs.service.model.impl.ChatRoomImpl" name="ChatRoom">
+		<table name="VideoChat_ChatRoom" />
+		<attributes />
+	</entity>
+	<entity class="com.rcs.service.model.impl.ChatRoomGroupImpl" name="ChatRoomGroup">
+		<table name="VideoChat_ChatRoomGroup" />
+		<attributes />
+	</entity>
+	<entity class="com.rcs.service.model.impl.ConfigurationImpl" name="Configuration">
+		<table name="VideoChat_Configuration" />
+		<attributes />
+	</entity>
+</entity-mappings>

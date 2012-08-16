@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+
+<model-hints>
+	<model name="com.rcs.service.model.ChatRoom">
+		<field name="chatRoomId" type="long" />
+		<field name="groupId" type="long" />
+		<field name="companyId" type="long" />
+		<field name="userId" type="long" />
+		<field name="userName" type="String" />
+		<field name="createDate" type="Date" />
+		<field name="modifiedDate" type="Date" />
+		<field name="sessionId" type="String">
+			<hint name="max-length">255</hint>
+		</field>
+		<field name="name" type="String" />
+		<field name="description" type="String">
+			<hint name="max-length">255</hint>
+		</field>
+	</model>
+	<model name="com.rcs.service.model.ChatRoomGroup">
+		<field name="chatRoomId" type="long" />
+		<field name="chatRoomGroupId" type="long" />
+		<field name="groupId" type="long" />
+		<field name="companyId" type="long" />
+		<field name="userId" type="long" />
+		<field name="userName" type="String" />
+		<field name="createDate" type="Date" />
+		<field name="modifiedDate" type="Date" />
+		<field name="type" type="int" />
+	</model>
+	<model name="com.rcs.service.model.Configuration">
+		<field name="apiKey" type="String" />
+		<field name="groupId" type="long" />
+		<field name="companyId" type="long" />
+		<field name="userId" type="long" />
+		<field name="userName" type="String" />
+		<field name="createDate" type="Date" />
+		<field name="modifiedDate" type="Date" />
+		<field name="apiSecret" type="String">
+			<hint name="max-length">255</hint>
+		</field>
+		<field name="type" type="int" />
+	</model>
+</model-hints>

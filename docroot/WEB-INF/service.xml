@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE service-builder PUBLIC "-//Liferay//DTD Service Builder 6.0.0//EN" "http://www.liferay.com/dtd/liferay-service-builder_6_0_0.dtd">
+<service-builder package-path="com.rcs.service">
+	<author>flor</author>
+	<namespace>VideoChat</namespace>
+	<entity name="ChatRoom" local-service="true" remote-service="false">
+
+        <!-- PK fields -->
+
+        <column name="chatRoomId" type="long" primary="true" />        
+
+        <!-- Group instance -->
+
+        <column name="groupId" type="long" />
+
+        <!-- Audit fields -->
+
+        <column name="companyId" type="long" />
+        <column name="userId" type="long" />
+        <column name="userName" type="String" />
+        <column name="createDate" type="Date" />
+        <column name="modifiedDate" type="Date" />
+
+        <!-- Other fields -->
+
+        <column name="sessionId" type="String" />
+        <column name="name" type="String" />
+        <column name="description" type="String" />        
+        
+		<!-- Order -->
+
+		<order by="asc">
+			<order-column name="name" />
+		</order>
+    </entity>
+    <entity name="ChatRoomGroup" local-service="true" remote-service="false">
+    
+    	<!-- PK fields -->
+    	
+    	<column name="chatRoomId" type="long" primary="true" />
+    	<column name="chatRoomGroupId" type="long" primary="true"/>
+    	
+    	<!-- Group instance -->
+
+        <column name="groupId" type="long" />
+
+        <!-- Audit fields -->
+
+        <column name="companyId" type="long" />
+        <column name="userId" type="long" />
+        <column name="userName" type="String" />
+        <column name="createDate" type="Date" />
+        <column name="modifiedDate" type="Date" />
+        
+        <!-- Other fields -->
+        
+        <column name="type" type="int"/>
+        
+        <!-- Finder methods -->
+
+		<finder name="BY_chatRoomId" return-type="Collection">
+			<finder-column name="chatRoomId" />
+		</finder>
+		
+		<finder name="BY_chatRoomIdAndType" return-type="Collection">
+			<finder-column name="chatRoomId" />
+			<finder-column name="type" />
+		</finder>
+    </entity>
+    <entity name="Configuration" local-service="true" remote-service="false">
+
+        <!-- PK fields -->
+
+        <column name="apiKey" type="String" primary="true" />        
+
+        <!-- Group instance -->
+
+        <column name="groupId" type="long" />
+
+        <!-- Audit fields -->
+
+        <column name="companyId" type="long" />
+        <column name="userId" type="long" />
+        <column name="userName" type="String" />
+        <column name="createDate" type="Date" />
+        <column name="modifiedDate" type="Date" />
+
+        <!-- Other fields -->
+
+        <column name="apiSecret" type="String" />                       	
+        <column name="type" type="int" />
+    </entity>
+</service-builder>

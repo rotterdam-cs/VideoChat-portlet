@@ -1,0 +1,27 @@
+.container {
+  margin-top: 50px; }
+
+.icon-grey {
+  background-image: url("../img/glyphicons-halflings-grey.png"); }
+
+.user {
+  padding: 5px 0px 0px 5px;
+  display: block; }
+
+.chat li {
+  width: 140px; }
+
+.presenter li {
+  width: 140px; }
+
+div.speaker {
+  width: 460px;
+  height: 317px; }
+
+li.speaker {
+  width: 468px; }
+
+div.video-small {
+  width: 140px;
+  height: 97px; }
+
