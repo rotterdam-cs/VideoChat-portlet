@@ -73,16 +73,14 @@ public class ConfigurationLocalServiceImpl
 		try {
 			List<Configuration> configurations = configurationPersistence.findAll();			
 			if(configurations.size() > 0) {
-	    		Configuration configuration = configurations.get(0);
-	    		System.out.println("is test server: " + (configuration.getType() == 0));
+	    		Configuration configuration = configurations.get(0);	    		
 	    		return (configuration.getType() == 0);    			
 	    	}
 		} catch(SystemException e) {
 			e.printStackTrace();
 		} catch(Exception e) {
 			e.printStackTrace();
-		}			
-		System.out.println("is test server: derecho al true");
+		}					
 		return true;
 	}
 	
