@@ -207,22 +207,19 @@ public class ChatRoomController {
         // save chat room groups        
         ChatRoom newChatRoom = resultupdate.getPayload();        
         if(StringUtils.hasText(siteId)) {
-            List<String> siteIds = Arrays.asList(siteId.split("\\s*,\\s*"));
-            log.error("siteIds.size()" + siteIds.size());
+            List<String> siteIds = Arrays.asList(siteId.split("\\s*,\\s*"));            
             for(String siteIdStr : siteIds) {    			
     			chatRoomGroupExpert.addChatRoomGroup(pII, newChatRoom.getChatRoomId(), Long.parseLong(siteIdStr), 1); //@@ set constant
     		}
         }
         if(StringUtils.hasText(organizationId)) {
-        	List<String> organizationIds = Arrays.asList(organizationId.split("\\s*,\\s*"));
-        	log.error("organizationIds.size()" + organizationIds.size());
+        	List<String> organizationIds = Arrays.asList(organizationId.split("\\s*,\\s*"));        	
         	for(String organizationIdStr : organizationIds) {
     			chatRoomGroupExpert.addChatRoomGroup(pII, newChatRoom.getChatRoomId(), Long.parseLong(organizationIdStr), 3); //@@ set constant
     		}
         }
         if(StringUtils.hasText(userGroupId)) {
-        	List<String> userGroupIds = Arrays.asList(userGroupId.split("\\s*,\\s*"));
-        	log.error("userGroupIds.size()" + userGroupIds.size());    		    	
+        	List<String> userGroupIds = Arrays.asList(userGroupId.split("\\s*,\\s*"));        	
     		for(String userGroupIdStr : userGroupIds) {
     			chatRoomGroupExpert.addChatRoomGroup(pII, newChatRoom.getChatRoomId(), Long.parseLong(userGroupIdStr), 0); //@@ set constant
     		}
