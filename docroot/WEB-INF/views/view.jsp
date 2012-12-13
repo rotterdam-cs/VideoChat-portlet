@@ -283,7 +283,7 @@
        }
        
        jQuery('#publisher-div').html('<div id="publisher" ></div>');
-       jQuery('#leftDiv').attr('style','display:""');
+       jQuery('#leftDiv').attr('style','display:"";min-width:180px;');
        jQuery('#subscribers-div').attr('style','display:""');
        
        publisher = session.publish('publisher', {wmode: "window", width: publisherWidth, height: publisherHeight});       
