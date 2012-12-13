@@ -48,8 +48,7 @@ public class ChatRoomExpert {
 				}
 				Configuration configuration = configurations.get(0);
 				// generate the session id to create a chat room in opentok server
-				OpenTokSDK sdk = new OpenTokSDK(Integer.parseInt(ConfigurationLocalServiceUtil.getApiKey()), ConfigurationLocalServiceUtil.getApiSecret());															
-				System.out.println("sdk: " + sdk);
+				OpenTokSDK sdk = new OpenTokSDK(Integer.parseInt(ConfigurationLocalServiceUtil.getApiKey()), ConfigurationLocalServiceUtil.getApiSecret());																			
 				//@@ chequear este error
 				String sessionId = "";
 				try {
@@ -59,8 +58,7 @@ public class ChatRoomExpert {
 					resultupdate = ServiceActionResult.buildFailure(null);
 					resultupdate.setMessage("@@ The api key and/or api secret provided for opentok are wrong.");
 					return resultupdate;
-				}
-				System.out.println("sessionId: " + sessionId);
+				}				
 				// create the chat room
 				ChatRoom chatRoom = ChatRoomLocalServiceUtil.addChatRoom(pII.getUserId(), chatRoomName, chatRoomDescription, sessionId);		        
 		        resultupdate = ServiceActionResult.buildSuccess(chatRoom);
