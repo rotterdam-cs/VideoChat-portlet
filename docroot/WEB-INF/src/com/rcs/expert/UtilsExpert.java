@@ -61,8 +61,7 @@ public class UtilsExpert {
 	 */
 	public String getJsonFromLocalResponse(LocalResponse localResponse) {
         Gson gson = new Gson();
-        String result = gson.toJson(localResponse);
-        log.error("validationMessage: " + result);
+        String result = gson.toJson(localResponse);        
         return result;
 
     }
