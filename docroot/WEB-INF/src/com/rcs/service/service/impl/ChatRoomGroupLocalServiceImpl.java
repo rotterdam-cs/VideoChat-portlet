@@ -75,16 +75,7 @@ public class ChatRoomGroupLocalServiceImpl
 	public List<ChatRoomGroup> getChatRoomsByChatRoomId(long chatRoomId) throws PortalException, SystemException {
 		List<ChatRoomGroup> chatRoomGroups = new ArrayList<ChatRoomGroup>();
 		chatRoomGroups = chatRoomGroupPersistence.findByBY_chatRoomId(chatRoomId);
-		return chatRoomGroups;
-		/*try {
-			System.out.println("ChatRoomGroupLocalServiceImpl:getChatRoomsByChatRoomId:chatRoomId: " + chatRoomId);
-			chatRoomGroups = chatRoomGroupPersistence.findByBY_chatRoomId(chatRoomId);			
-			System.out.println("ChatRoomGroupLocalServiceImpl:getChatRoomsByChatRoomId:chatRoomGroups: " + chatRoomGroups.size());
-		} catch (NullPointerException e) {
-			return new ArrayList<ChatRoomGroup>();
-		}
-		
-		return chatRoomGroups;*/
+		return chatRoomGroups;		
 	}
 	
 	public List<Group> getGroupsByChatRoomGroups(List<ChatRoomGroup> chatRoomGroups) {
@@ -94,5 +85,4 @@ public class ChatRoomGroupLocalServiceImpl
 		}
 		return groups;
 	}
-	//public List<ChatRoomGroup> getChatRoomsGroups
 }
