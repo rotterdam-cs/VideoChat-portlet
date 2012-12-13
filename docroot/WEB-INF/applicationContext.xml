@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:tx="http://www.springframework.org/schema/tx"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:task="http://www.springframework.org/schema/task"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
@@ -11,7 +12,7 @@
                         http://www.springframework.org/schema/task/spring-task.xsd">						
 		
 	<!-- enable annotation configuration -->
-    <context:annotation-config />	
+    <context:annotation-config />	       
     
     <!-- look for service classes -->
     <context:component-scan base-package="com.rcs.expert" />
