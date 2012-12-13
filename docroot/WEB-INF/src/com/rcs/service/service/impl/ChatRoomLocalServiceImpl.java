@@ -95,15 +95,12 @@ public class ChatRoomLocalServiceImpl extends ChatRoomLocalServiceBaseImpl {
 		User user = UserUtil.findByPrimaryKey(userId);
 		List userGroups = user.getGroups();
 		List<ChatRoom> chatRooms = chatRoomPersistence.findAll();
-		for(ChatRoom chatRoom : chatRooms) {
-			System.out.println("chatRoom.getChatRoomId(): " + chatRoom.getChatRoomId());
-			List<ChatRoomGroup> chatRoomGroups = chatRoom.getChatRoomGroups();
-			System.out.println("chatRoomGroups.size(): " + chatRoomGroups.size());
+		for(ChatRoom chatRoom : chatRooms) {			
+			List<ChatRoomGroup> chatRoomGroups = chatRoom.getChatRoomGroups();			
 			if(chatRoomGroups.size() == 0) {
 				userChatRooms.add(chatRoom);
 			} else {
-				for(ChatRoomGroup chatRoomGroup : chatRoomGroups) {
-					System.out.println("chatRoomGroup.getChatRoomGroupId(): " + chatRoomGroup.getChatRoomGroupId());
+				for(ChatRoomGroup chatRoomGroup : chatRoomGroups) {					
 					Group group = chatRoomGroup.getGroup();
 					if(userGroups.contains(group)) {
 						userChatRooms.add(chatRoom);
