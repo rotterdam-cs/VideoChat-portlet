@@ -51,12 +51,13 @@
 						<li id="users-title-li" class="nav-header" style="display:none;"><fmt:message key="com.rcs.videochat.users"/> <i class="icon-info-sign" rel="tooltip" title="<fmt:message key="com.rcs.videochat.camera.icon"/>" data-placement="right" trigger="hover"></i></li>						
 	    			</ul>	    				    		
 	    		</div>
-	    		<div class="span5">	    			    	
-		    		<div id="subscribers-div">		    			
-		    			<select id="video-chat-mode-select" class="span2">
+	    		<div class="span6">	    			    	
+		    		<div id="subscribers-div">		    					    			
+	    				<select id="video-chat-mode-select" class="span2">
 							<option id="group-chat-option" selected="selected"><fmt:message key="com.rcs.videochat.group.chat"/></option>
 							<option id="presentation-option"><fmt:message key="com.rcs.videochat.presentation"/></option>						
-						</select><i class="icon-info-sign" rel="tooltip" title="<fmt:message key="com.rcs.videochat.chat.mode.info"/>" data-placement="right" trigger="hover"></i>						
+						</select>
+						<i class="icon-info-sign" rel="tooltip" title="<fmt:message key="com.rcs.videochat.chat.mode.info"/>" data-placement="right" trigger="hover"></i>						
 						<div id="message-div" class="alert alert-success fade in" style="display:none;"></div>    			    					  					 
 					  	<ul id="list1" class="thumbnails presenter">						  
 					  	</ul>	  
