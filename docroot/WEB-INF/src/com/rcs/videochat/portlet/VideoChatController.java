@@ -49,8 +49,8 @@ public class VideoChatController {
 	private static Log log = LogFactoryUtil.getLog(VideoChatController.class);	
 	private Locale locale;
 	
-	@Autowired
-	private UtilsExpert utilsExpert;
+	private UtilsExpert utilsExpert = new UtilsExpert();
+	
 	@RenderMapping
 	public ModelAndView resolveView(PortletRequest request, PortletResponse response) throws PortalException, SystemException {		
 		
@@ -64,7 +64,7 @@ public class VideoChatController {
 				String message = ResourceBundleHelper.getKeyLocalizedValue("com.rcs.videochat.login.error", locale);
 				model.put("errorMessage", message);
 				model.put("errorCode", "1");
-				return new ModelAndView("view", model);
+				return new ModelAndView("/WEB-INF/views/view.jsp", model);
 			}
 						
 			List<ChatRoom> chatRooms = ChatRoomLocalServiceUtil.getChatRoomsForUser(user.getUserId());
@@ -74,7 +74,7 @@ public class VideoChatController {
 				String message = ResourceBundleHelper.getKeyLocalizedValue("com.rcs.videochat.no.chatroom.error", locale);
 				model.put("errorMessage", message);
 				model.put("errorCode", "1");
-				return new ModelAndView("view", model);
+				return new ModelAndView("/WEB-INF/views/view.jsp", model);
 			}
 			model.put("chatRooms", chatRooms);
 			model.put("apiKey", ConfigurationLocalServiceUtil.getApiKey());
@@ -95,7 +95,7 @@ public class VideoChatController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}  		
-		return new ModelAndView("view", model);
+		return new ModelAndView("/WEB-INF/views/view.jsp", model);
 	}
 	
 	@ResourceMapping(value = "getToken")
