@@ -59,15 +59,12 @@ public class ChatRoomController {
 	private PortalInstanceIdentifier pII;
 	private Locale locale;	
 	private boolean authorized;
-	
-	@Autowired
-    private UtilsExpert utilsExpert;
-	
-	@Autowired
-    private ChatRoomExpert chatRoomExpert;
-	
-	@Autowired
-    private ChatRoomGroupExpert chatRoomGroupExpert;
+		
+    private UtilsExpert utilsExpert = new UtilsExpert();
+		
+    private ChatRoomExpert chatRoomExpert = new ChatRoomExpert();
+		
+    private ChatRoomGroupExpert chatRoomGroupExpert = new ChatRoomGroupExpert();
 	/**
 	 * Main view
 	 * @param request
@@ -77,8 +74,8 @@ public class ChatRoomController {
 	 * @throws SystemException
 	 */
 	@RenderMapping
-	public ModelAndView resolveView(PortletRequest request, PortletResponse response) throws PortalException, SystemException {		  
-		return new ModelAndView("chatroom/chatrooms");
+	public ModelAndView resolveView(PortletRequest request, PortletResponse response) throws PortalException, SystemException {
+		return new ModelAndView("/WEB-INF/views/chatroom/chatrooms.jsp");
 	}
 	
 	@ResourceMapping(value = "adminSections")
@@ -103,19 +100,19 @@ public class ChatRoomController {
         		/*locale = LocaleUtil.fromLanguageId(LanguageUtil.getLanguageId(request));        		
         		String message = ResourceBundleHelper.getKeyLocalizedValue("com.rcs.admin.chatroom.overview.info", locale);
         		model.put("errorMessage", message);*/                
-        		return new ModelAndView("chatroom/configuration", model);
+        		return new ModelAndView("/WEB-INF/views/chatroom/configuration.jsp", model);
         	}        	
 			List<ChatRoom> chatRooms = ChatRoomLocalServiceUtil.getChatRooms(0, ChatRoomLocalServiceUtil.getChatRoomsCount());
 			model.put("chatRooms", chatRooms);
         } 
-        return new ModelAndView("chatroom/" + section, model);       
+        return new ModelAndView("/WEB-INF/views/chatroom/" + section + ".jsp", model);       
     }
 	
 	@ResourceMapping(value = "showChatRooms")
 	public ModelAndView showChatRoomsController(ResourceRequest request,ResourceResponse response) throws PortalException, SystemException {
 		Map<String, Object> model = new HashMap<String, Object>();				
 		if(ConfigurationLocalServiceUtil.getConfigurationsCount() == 0) {
-			return new ModelAndView("chatroom/configuration", model);
+			return new ModelAndView("/WEB-INF/views/chatroom/configuration.jsp", model);
 		}
 		// get chat rooms
 		try {			
@@ -125,7 +122,7 @@ public class ChatRoomController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 		
-		return new ModelAndView("chatroom/chatroomsOverview", model);
+		return new ModelAndView("/WEB-INF/views/chatroom/chatroomsOverview.jsp", model);
 	}
 	
 	/**
@@ -161,7 +158,7 @@ public class ChatRoomController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        return new ModelAndView("chatroom/edit", model);	
+        return new ModelAndView("/WEB-INF/views/chatroom/edit.jsp", model);	
 	}
 	
 	/**
