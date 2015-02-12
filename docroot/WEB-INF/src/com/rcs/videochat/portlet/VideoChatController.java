@@ -9,9 +9,7 @@ import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
-import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.portlet.ModelAndView;
@@ -25,15 +23,10 @@ import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
-import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.User;
-
 import com.liferay.portal.util.PortalUtil;
-import com.opentok.api.API_Config;
 import com.opentok.api.OpenTokSDK;
 import com.opentok.api.constants.RoleConstants;
-import com.opentok.api.constants.SessionProperties;
-import com.opentok.exception.OpenTokException;
 import com.rcs.common.LocalResponse;
 import com.rcs.common.ResourceBundleHelper;
 import com.rcs.common.UserData;
@@ -64,7 +57,7 @@ public class VideoChatController {
 				String message = ResourceBundleHelper.getKeyLocalizedValue("com.rcs.videochat.login.error", locale);
 				model.put("errorMessage", message);
 				model.put("errorCode", "1");
-				return new ModelAndView("/WEB-INF/views/view.jsp", model);
+				return new ModelAndView("view", model);
 			}
 						
 			List<ChatRoom> chatRooms = ChatRoomLocalServiceUtil.getChatRoomsForUser(user.getUserId());
@@ -74,7 +67,7 @@ public class VideoChatController {
 				String message = ResourceBundleHelper.getKeyLocalizedValue("com.rcs.videochat.no.chatroom.error", locale);
 				model.put("errorMessage", message);
 				model.put("errorCode", "1");
-				return new ModelAndView("/WEB-INF/views/view.jsp", model);
+				return new ModelAndView("view", model);
 			}
 			model.put("chatRooms", chatRooms);
 			model.put("apiKey", ConfigurationLocalServiceUtil.getApiKey());
@@ -92,10 +85,9 @@ public class VideoChatController {
 	        model.put("userData", userDataJSON);
 	        model.put("userFirstName", user.getFirstName());
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e.getMessage());
 		}  		
-		return new ModelAndView("/WEB-INF/views/view.jsp", model);
+		return new ModelAndView("view", model);
 	}
 	
 	@ResourceMapping(value = "getToken")
