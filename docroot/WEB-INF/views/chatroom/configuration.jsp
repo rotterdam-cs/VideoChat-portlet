@@ -12,8 +12,8 @@
 <fmt:setBundle basename="Language"/>
 <portlet:defineObjects />
 <portlet:resourceURL var="saveConfigurationURL" id="saveConfiguration" />
-<div class="yui3-widget aui-component aui-helpbox">
-	<div class="portlet-description aui-helpbox-content" data-visible-panel="true">		
+<div class="yui3-widget component helpbox">
+	<div class="portlet-description helpbox-content" data-visible-panel="true">		
 		<fmt:message key="com.rcs.admin.configuration.message"/>
 	</div>
 	<br/>
@@ -36,6 +36,7 @@
 			<option id="production-server-option" <c:if test="${type == 1}" >selected="selected"</c:if> value="1"><fmt:message key="com.rcs.admin.configuration.production.server"/></option>						
 		</select><i class="icon-info-sign" rel="tooltip" title="<fmt:message key="com.rcs.admin.configuration.select.info"/>" data-placement="right" trigger="hover"></i>
 	</p>
+	<input type="hidden" name="<portlet:namespace/>typeSelect" id="<portlet:namespace/>typeSelect"/>
     <p>
         <button type="button" class="btn" id="<portlet:namespace/>save-configuration" ><fmt:message key="com.rcs.admin.chat.room.save"/></button>       
     </p>
@@ -53,27 +54,15 @@
     	
         <%--//Handle SAVE Response--%>
         function saveHandleResponse(responseText, statusText, xhr, form) {  
-        	//jQuery("#<portlet:namespace/>administration-container-mask").unmask();
-        	console.log('${errorMessage}');
-        	
         	var response = getResponseTextInfo(responseText);
             if (!response[0]) {
             	showError(response[1]);                           
             } else {
-            	showInfo(response[1]);               
-                //jQuery(".admin-right-menu li.disabled").removeClass("disabled");
-                //jQuery("#<portlet:namespace/>save-configuration").attr("disabled", true);
+            	jQuery("#chatroomsOverviewMenu").removeClass("hidden");                	
+            	showInfo(response[1]);
                 var responseBodyObj = jQuery.parseJSON(response[2]);                
             }
         }        
-               
-        <%--//Enable save when onchange
-        jQuery(document).on("keypress", ".required", function() {
-            jQuery("#<portlet:namespace/>save-configuration").attr("disabled", false); 
-            jQuery("#<portlet:namespace/>save-configuration").show();
-        });--%>
-        
-        
         
         <%--//Validation Options --%>
         jQuery("#<portlet:namespace/>configurationform").validate({
@@ -92,6 +81,7 @@
         <%--//Configuration Form Button Listener--%> 
         jQuery("#<portlet:namespace/>save-configuration").click(function() {        	        
         	if(jQuery('#<portlet:namespace/>configurationform').valid()) {
+        		jQuery("#<portlet:namespace/>typeSelect").val( jQuery("#<portlet:namespace/>type-select option:selected").attr('value'));
         		var optionsSave = {
        	             url : '${saveConfigurationURL}'
        	             ,type : 'POST'
@@ -100,11 +90,6 @@
        	         };
         		jQuery('#<portlet:namespace/>configurationform').ajaxSubmit(optionsSave);	
         	}
-        	
-            //if(jQuery('#<portlet:namespace/>configurationform').valid()) {
-                //jQuery("#<portlet:namespace/>administration-container-mask").mask('<fmt:message key="com.rcs.general.mask.loading.text"/>');
-                
-            //}
         });
     });  
 </script>

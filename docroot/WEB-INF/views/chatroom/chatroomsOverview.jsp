@@ -14,8 +14,8 @@
 <portlet:resourceURL var="editChatRoomURL" id="editChatRoom" />
 <portlet:resourceURL var="deleteChatRoomURL" id="deleteChatRoom" />
 <portlet:resourceURL var="showChatRoomsURL" id="showChatRooms" />
-<div id="chat-rooms-overview-help-content" class="yui3-widget aui-component aui-helpbox">
-	<div class="portlet-description aui-helpbox-content" data-visible-panel="true">		
+<div id="chat-rooms-overview-help-content" class="yui3-widget component helpbox">
+	<div class="portlet-description helpbox-content" data-visible-panel="true">		
 		<fmt:message key="com.rcs.admin.chat.rooms.overview.message"/>
 	</div>
 	<br/>

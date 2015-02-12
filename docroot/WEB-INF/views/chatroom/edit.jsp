@@ -15,15 +15,15 @@
 <portlet:resourceURL var="saveChatRoomURL" id="saveChatRoom" />
 <portlet:resourceURL var="showChatRoomsURL" id="showChatRooms" />
 <portlet:resourceURL var="adminSectionsURL" id="adminSections" />
-<div class="yui3-widget aui-component aui-helpbox">
-	<div class="portlet-description aui-helpbox-content" data-visible-panel="true">		
+<div class="yui3-widget component helpbox">
+	<div class="portlet-description helpbox-content" data-visible-panel="true">		
 		<fmt:message key="com.rcs.admin.chat.room.edit.message"/> 
 	</div>
 </div>
 <br />
 <form class="well" id="<portlet:namespace/>chat-room-form">
 	<h3><fmt:message key="com.rcs.admin.chat.room"/> <i id="chat-room-info" class="icon-question-sign" rel="tooltip" title="<fmt:message key="com.rcs.admin.chat.room.info"/>" data-placement="right" trigger="hover"></i> </h3>	 
-    <input type="hidden" name="chatRoomId" value="${chatRoom.chatRoomId}"/>    
+    <input type="hidden" name="<portlet:namespace />chatRoomId" value="${chatRoom.chatRoomId}"/>    
     <p>
         <label for="<portlet:namespace/>chat-room-name"><fmt:message key="com.rcs.admin.chat.room.name"/>:*</label>
         <input type="text" name="<portlet:namespace/>chatRoomName" class="required span3" id="<portlet:namespace/>chat-room-name" value="${chatRoom.name}"/>
@@ -74,15 +74,15 @@
     </p>
 </form>
 <script type="text/javascript">
-function loadChatRooms() {
-	jQuery("#<portlet:namespace/>chat-rooms").load("${adminSectionsURL}"
-         ,{
-             "section" : "chatroomsOverview"
-         },function() {
-             //jQuery("#<portlet:namespace/>administration-container-mask").unmask();
-         }
-     );
-}
+	function loadChatRooms() {
+		jQuery("#<portlet:namespace/>chat-rooms").load("${adminSectionsURL}"
+	         ,{
+	             "section" : "chatroomsOverview"
+	         },function() {
+	             //jQuery("#<portlet:namespace/>administration-container-mask").unmask();
+	         }
+	     );
+	}
 	
 	jQuery(function() {
 		
@@ -104,7 +104,7 @@ function loadChatRooms() {
         
 		<%--//Handle SAVE Response--%>
 		function saveHandleResponse(responseText, statusText, xhr, form) {
-			console.log('${errorMessage}');        	
+    	
         	var response = getResponseTextInfo(responseText);
             if (!response[0]) {
             	showError(response[1]);                           
@@ -124,7 +124,7 @@ function loadChatRooms() {
     
 		<%--//Chat Room Form Button Listener --%>
         jQuery("#<portlet:namespace/>save-chat-room").click(function() {
-        	console.log("onClick");            
+           
             if(jQuery('#<portlet:namespace/>chat-room-form').valid()) {                
                 jQuery('#<portlet:namespace/>chat-room-form').ajaxSubmit(optionsSave);               
             }
@@ -134,5 +134,5 @@ function loadChatRooms() {
         	loadChatRooms();
         });
         
-});
+	});
 </script>   

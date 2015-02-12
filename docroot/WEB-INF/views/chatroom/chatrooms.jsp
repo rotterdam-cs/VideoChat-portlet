@@ -15,7 +15,7 @@
 <portlet:resourceURL var="adminSectionsURL" id="adminSections" />
 
 <div id="<portlet:namespace/>main-container">	
-	<div class="span12 admin-left-container">
+	<div class="span9 admin-left-container">
 	    <%@include file="topMessages.jsp" %>
 	    <div id="<portlet:namespace/>chat-rooms" ></div>
 	</div>
@@ -47,7 +47,7 @@ Liferay.on('portletReady', function(event) {
                 //jQuery(".admin-right-menu li.disabled").removeClass("disabled");
                 //jQuery("#<portlet:namespace/>save-configuration").attr("disabled", true);
                 var responseBodyObj = jQuery.parseJSON(response[2]);
-                console.log(responseBodyObj);
+                
             }
         }
         
@@ -56,13 +56,6 @@ Liferay.on('portletReady', function(event) {
                  "section" : "chatroomsOverview"
              },saveHandleResponse
          );
-    	
-    	
-    	/*jQuery("#<portlet:namespace/>chat-rooms").load("${showChatRoomsURL}"
-             ,function() {                 
-                 console.log("it worked");
-             }
-         );*/
     	
     	<%--//Load the first section (Account)--%>
         jQuery(function () {
@@ -73,7 +66,7 @@ Liferay.on('portletReady', function(event) {
         jQuery('a[data-toggle="tab"]').click(function () {
             //jQuery("#<portlet:namespace/>administration-container-mask").mask('<fmt:message key="com.rcs.general.mask.loading.text"/>');
             ///jQuery(".alert").hide();
-            console.log("change section");
+            //console.log("change section");
             jQuery(".alert-success").hide();
             jQuery(".alert-error").hide();
             var link = jQuery(this).attr("href").replace("#","");                
