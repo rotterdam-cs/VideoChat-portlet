@@ -9,13 +9,9 @@
 		<field name="userName" type="String" />
 		<field name="createDate" type="Date" />
 		<field name="modifiedDate" type="Date" />
-		<field name="sessionId" type="String">
-			<hint name="max-length">255</hint>
-		</field>
+		<field name="sessionId" type="String" />
 		<field name="name" type="String" />
-		<field name="description" type="String">
-			<hint name="max-length">255</hint>
-		</field>
+		<field name="description" type="String" />
 	</model>
 	<model name="com.rcs.service.model.ChatRoomGroup">
 		<field name="chatRoomId" type="long" />
@@ -36,9 +32,7 @@
 		<field name="userName" type="String" />
 		<field name="createDate" type="Date" />
 		<field name="modifiedDate" type="Date" />
-		<field name="apiSecret" type="String">
-			<hint name="max-length">255</hint>
-		</field>
+		<field name="apiSecret" type="String" />
 		<field name="type" type="int" />
 	</model>
 </model-hints>

@@ -23,6 +23,7 @@
 			<basic name="sessionId" />
 			<basic name="name" />
 			<basic name="description" />
+			<transient name="modelAttributes" />
 			<transient name="primaryKey" />
 			<transient name="primaryKeyObj" />
 			<transient name="userUuid" />
@@ -46,6 +47,7 @@
 			<basic name="type">
 				<column name="TYPE_" />
 			</basic>
+			<transient name="modelAttributes" />
 			<transient name="primaryKey" />
 			<transient name="primaryKeyObj" />
 			<transient name="userUuid" />
@@ -68,6 +70,7 @@
 			<basic name="type">
 				<column name="TYPE_" />
 			</basic>
+			<transient name="modelAttributes" />
 			<transient name="primaryKey" />
 			<transient name="primaryKeyObj" />
 			<transient name="userUuid" />
