@@ -1,3 +1,4 @@
 docroot/WEB-INF/classes/*
 .classpath
 .settings/*
+/.project

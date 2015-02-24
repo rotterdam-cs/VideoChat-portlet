@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2012 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -16,141 +16,451 @@ package com.rcs.service.model;
 
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.model.impl.BaseModelImpl;
 import com.liferay.portal.util.PortalUtil;
 
 import com.rcs.service.service.ChatRoomLocalServiceUtil;
+import com.rcs.service.service.ClpSerializer;
 
 import java.io.Serializable;
 
-import java.lang.reflect.Proxy;
+import java.lang.reflect.Method;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * @author flor
+ * @author Flor
+Ale
  */
 public class ChatRoomClp extends BaseModelImpl<ChatRoom> implements ChatRoom {
 	public ChatRoomClp() {
 	}
 
+	@Override
 	public Class<?> getModelClass() {
 		return ChatRoom.class;
 	}
 
+	@Override
 	public String getModelClassName() {
 		return ChatRoom.class.getName();
 	}
 
+	@Override
 	public long getPrimaryKey() {
 		return _chatRoomId;
 	}
 
+	@Override
 	public void setPrimaryKey(long primaryKey) {
 		setChatRoomId(primaryKey);
 	}
 
+	@Override
 	public Serializable getPrimaryKeyObj() {
-		return new Long(_chatRoomId);
+		return _chatRoomId;
 	}
 
+	@Override
 	public void setPrimaryKeyObj(Serializable primaryKeyObj) {
 		setPrimaryKey(((Long)primaryKeyObj).longValue());
 	}
 
+	@Override
+	public Map<String, Object> getModelAttributes() {
+		Map<String, Object> attributes = new HashMap<String, Object>();
+
+		attributes.put("chatRoomId", getChatRoomId());
+		attributes.put("groupId", getGroupId());
+		attributes.put("companyId", getCompanyId());
+		attributes.put("userId", getUserId());
+		attributes.put("userName", getUserName());
+		attributes.put("createDate", getCreateDate());
+		attributes.put("modifiedDate", getModifiedDate());
+		attributes.put("sessionId", getSessionId());
+		attributes.put("name", getName());
+		attributes.put("description", getDescription());
+
+		return attributes;
+	}
+
+	@Override
+	public void setModelAttributes(Map<String, Object> attributes) {
+		Long chatRoomId = (Long)attributes.get("chatRoomId");
+
+		if (chatRoomId != null) {
+			setChatRoomId(chatRoomId);
+		}
+
+		Long groupId = (Long)attributes.get("groupId");
+
+		if (groupId != null) {
+			setGroupId(groupId);
+		}
+
+		Long companyId = (Long)attributes.get("companyId");
+
+		if (companyId != null) {
+			setCompanyId(companyId);
+		}
+
+		Long userId = (Long)attributes.get("userId");
+
+		if (userId != null) {
+			setUserId(userId);
+		}
+
+		String userName = (String)attributes.get("userName");
+
+		if (userName != null) {
+			setUserName(userName);
+		}
+
+		Date createDate = (Date)attributes.get("createDate");
+
+		if (createDate != null) {
+			setCreateDate(createDate);
+		}
+
+		Date modifiedDate = (Date)attributes.get("modifiedDate");
+
+		if (modifiedDate != null) {
+			setModifiedDate(modifiedDate);
+		}
+
+		String sessionId = (String)attributes.get("sessionId");
+
+		if (sessionId != null) {
+			setSessionId(sessionId);
+		}
+
+		String name = (String)attributes.get("name");
+
+		if (name != null) {
+			setName(name);
+		}
+
+		String description = (String)attributes.get("description");
+
+		if (description != null) {
+			setDescription(description);
+		}
+	}
+
+	@Override
 	public long getChatRoomId() {
 		return _chatRoomId;
 	}
 
+	@Override
 	public void setChatRoomId(long chatRoomId) {
 		_chatRoomId = chatRoomId;
+
+		if (_chatRoomRemoteModel != null) {
+			try {
+				Class<?> clazz = _chatRoomRemoteModel.getClass();
+
+				Method method = clazz.getMethod("setChatRoomId", long.class);
+
+				method.invoke(_chatRoomRemoteModel, chatRoomId);
+			}
+			catch (Exception e) {
+				throw new UnsupportedOperationException(e);
+			}
+		}
 	}
 
+	@Override
 	public long getGroupId() {
 		return _groupId;
 	}
 
+	@Override
 	public void setGroupId(long groupId) {
 		_groupId = groupId;
+
+		if (_chatRoomRemoteModel != null) {
+			try {
+				Class<?> clazz = _chatRoomRemoteModel.getClass();
+
+				Method method = clazz.getMethod("setGroupId", long.class);
+
+				method.invoke(_chatRoomRemoteModel, groupId);
+			}
+			catch (Exception e) {
+				throw new UnsupportedOperationException(e);
+			}
+		}
 	}
 
+	@Override
 	public long getCompanyId() {
 		return _companyId;
 	}
 
+	@Override
 	public void setCompanyId(long companyId) {
 		_companyId = companyId;
+
+		if (_chatRoomRemoteModel != null) {
+			try {
+				Class<?> clazz = _chatRoomRemoteModel.getClass();
+
+				Method method = clazz.getMethod("setCompanyId", long.class);
+
+				method.invoke(_chatRoomRemoteModel, companyId);
+			}
+			catch (Exception e) {
+				throw new UnsupportedOperationException(e);
+			}
+		}
 	}
 
+	@Override
 	public long getUserId() {
 		return _userId;
 	}
 
+	@Override
 	public void setUserId(long userId) {
 		_userId = userId;
+
+		if (_chatRoomRemoteModel != null) {
+			try {
+				Class<?> clazz = _chatRoomRemoteModel.getClass();
+
+				Method method = clazz.getMethod("setUserId", long.class);
+
+				method.invoke(_chatRoomRemoteModel, userId);
+			}
+			catch (Exception e) {
+				throw new UnsupportedOperationException(e);
+			}
+		}
 	}
 
+	@Override
 	public String getUserUuid() throws SystemException {
 		return PortalUtil.getUserValue(getUserId(), "uuid", _userUuid);
 	}
 
+	@Override
 	public void setUserUuid(String userUuid) {
 		_userUuid = userUuid;
 	}
 
+	@Override
 	public String getUserName() {
 		return _userName;
 	}
 
+	@Override
 	public void setUserName(String userName) {
 		_userName = userName;
+
+		if (_chatRoomRemoteModel != null) {
+			try {
+				Class<?> clazz = _chatRoomRemoteModel.getClass();
+
+				Method method = clazz.getMethod("setUserName", String.class);
+
+				method.invoke(_chatRoomRemoteModel, userName);
+			}
+			catch (Exception e) {
+				throw new UnsupportedOperationException(e);
+			}
+		}
 	}
 
+	@Override
 	public Date getCreateDate() {
 		return _createDate;
 	}
 
+	@Override
 	public void setCreateDate(Date createDate) {
 		_createDate = createDate;
+
+		if (_chatRoomRemoteModel != null) {
+			try {
+				Class<?> clazz = _chatRoomRemoteModel.getClass();
+
+				Method method = clazz.getMethod("setCreateDate", Date.class);
+
+				method.invoke(_chatRoomRemoteModel, createDate);
+			}
+			catch (Exception e) {
+				throw new UnsupportedOperationException(e);
+			}
+		}
 	}
 
+	@Override
 	public Date getModifiedDate() {
 		return _modifiedDate;
 	}
 
+	@Override
 	public void setModifiedDate(Date modifiedDate) {
 		_modifiedDate = modifiedDate;
+
+		if (_chatRoomRemoteModel != null) {
+			try {
+				Class<?> clazz = _chatRoomRemoteModel.getClass();
+
+				Method method = clazz.getMethod("setModifiedDate", Date.class);
+
+				method.invoke(_chatRoomRemoteModel, modifiedDate);
+			}
+			catch (Exception e) {
+				throw new UnsupportedOperationException(e);
+			}
+		}
 	}
 
+	@Override
 	public String getSessionId() {
 		return _sessionId;
 	}
 
+	@Override
 	public void setSessionId(String sessionId) {
 		_sessionId = sessionId;
+
+		if (_chatRoomRemoteModel != null) {
+			try {
+				Class<?> clazz = _chatRoomRemoteModel.getClass();
+
+				Method method = clazz.getMethod("setSessionId", String.class);
+
+				method.invoke(_chatRoomRemoteModel, sessionId);
+			}
+			catch (Exception e) {
+				throw new UnsupportedOperationException(e);
+			}
+		}
 	}
 
+	@Override
 	public String getName() {
 		return _name;
 	}
 
+	@Override
 	public void setName(String name) {
 		_name = name;
+
+		if (_chatRoomRemoteModel != null) {
+			try {
+				Class<?> clazz = _chatRoomRemoteModel.getClass();
+
+				Method method = clazz.getMethod("setName", String.class);
+
+				method.invoke(_chatRoomRemoteModel, name);
+			}
+			catch (Exception e) {
+				throw new UnsupportedOperationException(e);
+			}
+		}
 	}
 
+	@Override
 	public String getDescription() {
 		return _description;
 	}
 
+	@Override
 	public void setDescription(String description) {
 		_description = description;
+
+		if (_chatRoomRemoteModel != null) {
+			try {
+				Class<?> clazz = _chatRoomRemoteModel.getClass();
+
+				Method method = clazz.getMethod("setDescription", String.class);
+
+				method.invoke(_chatRoomRemoteModel, description);
+			}
+			catch (Exception e) {
+				throw new UnsupportedOperationException(e);
+			}
+		}
 	}
 
+	@Override
 	public java.util.List<com.rcs.service.model.ChatRoomGroup> getChatRoomGroups() {
-		throw new UnsupportedOperationException();
+		try {
+			String methodName = "getChatRoomGroups";
+
+			Class<?>[] parameterTypes = new Class<?>[] {  };
+
+			Object[] parameterValues = new Object[] {  };
+
+			java.util.List<com.rcs.service.model.ChatRoomGroup> returnObj = (java.util.List<com.rcs.service.model.ChatRoomGroup>)invokeOnRemoteModel(methodName,
+					parameterTypes, parameterValues);
+
+			return returnObj;
+		}
+		catch (Exception e) {
+			throw new UnsupportedOperationException(e);
+		}
 	}
 
+	public BaseModel<?> getChatRoomRemoteModel() {
+		return _chatRoomRemoteModel;
+	}
+
+	public void setChatRoomRemoteModel(BaseModel<?> chatRoomRemoteModel) {
+		_chatRoomRemoteModel = chatRoomRemoteModel;
+	}
+
+	public Object invokeOnRemoteModel(String methodName,
+		Class<?>[] parameterTypes, Object[] parameterValues)
+		throws Exception {
+		Object[] remoteParameterValues = new Object[parameterValues.length];
+
+		for (int i = 0; i < parameterValues.length; i++) {
+			if (parameterValues[i] != null) {
+				remoteParameterValues[i] = ClpSerializer.translateInput(parameterValues[i]);
+			}
+		}
+
+		Class<?> remoteModelClass = _chatRoomRemoteModel.getClass();
+
+		ClassLoader remoteModelClassLoader = remoteModelClass.getClassLoader();
+
+		Class<?>[] remoteParameterTypes = new Class[parameterTypes.length];
+
+		for (int i = 0; i < parameterTypes.length; i++) {
+			if (parameterTypes[i].isPrimitive()) {
+				remoteParameterTypes[i] = parameterTypes[i];
+			}
+			else {
+				String parameterTypeName = parameterTypes[i].getName();
+
+				remoteParameterTypes[i] = remoteModelClassLoader.loadClass(parameterTypeName);
+			}
+		}
+
+		Method method = remoteModelClass.getMethod(methodName,
+				remoteParameterTypes);
+
+		Object returnValue = method.invoke(_chatRoomRemoteModel,
+				remoteParameterValues);
+
+		if (returnValue != null) {
+			returnValue = ClpSerializer.translateOutput(returnValue);
+		}
+
+		return returnValue;
+	}
+
+	@Override
 	public void persist() throws SystemException {
 		if (this.isNew()) {
 			ChatRoomLocalServiceUtil.addChatRoom(this);
@@ -162,7 +472,7 @@ public class ChatRoomClp extends BaseModelImpl<ChatRoom> implements ChatRoom {
 
 	@Override
 	public ChatRoom toEscapedModel() {
-		return (ChatRoom)Proxy.newProxyInstance(ChatRoom.class.getClassLoader(),
+		return (ChatRoom)ProxyUtil.newProxyInstance(ChatRoom.class.getClassLoader(),
 			new Class[] { ChatRoom.class }, new AutoEscapeBeanHandler(this));
 	}
 
@@ -184,6 +494,7 @@ public class ChatRoomClp extends BaseModelImpl<ChatRoom> implements ChatRoom {
 		return clone;
 	}
 
+	@Override
 	public int compareTo(ChatRoom chatRoom) {
 		int value = 0;
 
@@ -198,18 +509,15 @@ public class ChatRoomClp extends BaseModelImpl<ChatRoom> implements ChatRoom {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj == null) {
+		if (this == obj) {
+			return true;
+		}
+
+		if (!(obj instanceof ChatRoomClp)) {
 			return false;
 		}
 
-		ChatRoomClp chatRoom = null;
-
-		try {
-			chatRoom = (ChatRoomClp)obj;
-		}
-		catch (ClassCastException cce) {
-			return false;
-		}
+		ChatRoomClp chatRoom = (ChatRoomClp)obj;
 
 		long primaryKey = chatRoom.getPrimaryKey();
 
@@ -255,6 +563,7 @@ public class ChatRoomClp extends BaseModelImpl<ChatRoom> implements ChatRoom {
 		return sb.toString();
 	}
 
+	@Override
 	public String toXmlString() {
 		StringBundler sb = new StringBundler(34);
 
@@ -319,4 +628,5 @@ public class ChatRoomClp extends BaseModelImpl<ChatRoom> implements ChatRoom {
 	private String _sessionId;
 	private String _name;
 	private String _description;
+	private BaseModel<?> _chatRoomRemoteModel;
 }

@@ -20,8 +20,6 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.rcs.service.model.ChatRoomGroup;
 import com.rcs.service.service.ChatRoomGroupLocalServiceUtil;
-import com.rcs.service.service.impl.ChatRoomGroupLocalServiceImpl;
-import com.rcs.service.service.persistence.ChatRoomGroupUtil;
 
 /**
  * The extended model implementation for the ChatRoom service. Represents a row in the &quot;VideoChat_ChatRoom&quot; database table, with each column mapped to a property of this class.

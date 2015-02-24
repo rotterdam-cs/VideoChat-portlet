@@ -21,10 +21,7 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.persistence.UserUtil;
-import com.opentok.api.API_Config;
-import com.rcs.service.model.ChatRoom;
 import com.rcs.service.model.Configuration;
-import com.rcs.service.service.ConfigurationLocalServiceUtil;
 import com.rcs.service.service.base.ConfigurationLocalServiceBaseImpl;
 
 /**
@@ -64,7 +61,7 @@ public class ConfigurationLocalServiceImpl
 	    configuration.setUserName(user.getFullName());	    
 	    configuration.setModifiedDate(now);
 	    
-	    configuration = configurationPersistence.update(configuration, false);	    
+	    configuration = configurationPersistence.update(configuration);	    
 	    configurationPersistence.clearCache();	    	    
 	    return configuration;
 	}

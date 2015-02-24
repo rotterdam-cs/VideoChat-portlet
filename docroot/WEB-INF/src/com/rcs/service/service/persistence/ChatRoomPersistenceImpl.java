@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2012 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -14,8 +14,6 @@
 
 package com.rcs.service.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -33,11 +31,9 @@ import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.util.UnmodifiableList;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.model.ModelListener;
-import com.liferay.portal.service.persistence.BatchSessionUtil;
-import com.liferay.portal.service.persistence.ResourcePersistence;
-import com.liferay.portal.service.persistence.UserPersistence;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
 import com.rcs.service.NoSuchChatRoomException;
@@ -58,7 +54,7 @@ import java.util.List;
  * Caching information and settings can be found in <code>portal.properties</code>
  * </p>
  *
- * @author flor
+ * @author Flor|Ale
  * @see ChatRoomPersistence
  * @see ChatRoomUtil
  * @generated
@@ -77,19 +73,24 @@ public class ChatRoomPersistenceImpl extends BasePersistenceImpl<ChatRoom>
 		".List2";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_ALL = new FinderPath(ChatRoomModelImpl.ENTITY_CACHE_ENABLED,
 			ChatRoomModelImpl.FINDER_CACHE_ENABLED, ChatRoomImpl.class,
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findAll", new String[0]);
+			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findAll", new String[0]);
 	public static final FinderPath FINDER_PATH_WITHOUT_PAGINATION_FIND_ALL = new FinderPath(ChatRoomModelImpl.ENTITY_CACHE_ENABLED,
 			ChatRoomModelImpl.FINDER_CACHE_ENABLED, ChatRoomImpl.class,
-			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findAll", new String[0]);
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findAll", new String[0]);
 	public static final FinderPath FINDER_PATH_COUNT_ALL = new FinderPath(ChatRoomModelImpl.ENTITY_CACHE_ENABLED,
 			ChatRoomModelImpl.FINDER_CACHE_ENABLED, Long.class,
 			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countAll", new String[0]);
+
+	public ChatRoomPersistenceImpl() {
+		setModelClass(ChatRoom.class);
+	}
 
 	/**
 	 * Caches the chat room in the entity cache if it is enabled.
 	 *
 	 * @param chatRoom the chat room
 	 */
+	@Override
 	public void cacheResult(ChatRoom chatRoom) {
 		EntityCacheUtil.putResult(ChatRoomModelImpl.ENTITY_CACHE_ENABLED,
 			ChatRoomImpl.class, chatRoom.getPrimaryKey(), chatRoom);
@@ -102,6 +103,7 @@ public class ChatRoomPersistenceImpl extends BasePersistenceImpl<ChatRoom>
 	 *
 	 * @param chatRooms the chat rooms
 	 */
+	@Override
 	public void cacheResult(List<ChatRoom> chatRooms) {
 		for (ChatRoom chatRoom : chatRooms) {
 			if (EntityCacheUtil.getResult(
@@ -168,6 +170,7 @@ public class ChatRoomPersistenceImpl extends BasePersistenceImpl<ChatRoom>
 	 * @param chatRoomId the primary key for the new chat room
 	 * @return the new chat room
 	 */
+	@Override
 	public ChatRoom create(long chatRoomId) {
 		ChatRoom chatRoom = new ChatRoomImpl();
 
@@ -185,9 +188,10 @@ public class ChatRoomPersistenceImpl extends BasePersistenceImpl<ChatRoom>
 	 * @throws com.rcs.service.NoSuchChatRoomException if a chat room with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public ChatRoom remove(long chatRoomId)
 		throws NoSuchChatRoomException, SystemException {
-		return remove(Long.valueOf(chatRoomId));
+		return remove((Serializable)chatRoomId);
 	}
 
 	/**
@@ -240,7 +244,14 @@ public class ChatRoomPersistenceImpl extends BasePersistenceImpl<ChatRoom>
 		try {
 			session = openSession();
 
-			BatchSessionUtil.delete(session, chatRoom);
+			if (!session.contains(chatRoom)) {
+				chatRoom = (ChatRoom)session.get(ChatRoomImpl.class,
+						chatRoom.getPrimaryKeyObj());
+			}
+
+			if (chatRoom != null) {
+				session.delete(chatRoom);
+			}
 		}
 		catch (Exception e) {
 			throw processException(e);
@@ -249,24 +260,33 @@ public class ChatRoomPersistenceImpl extends BasePersistenceImpl<ChatRoom>
 			closeSession(session);
 		}
 
-		clearCache(chatRoom);
+		if (chatRoom != null) {
+			clearCache(chatRoom);
+		}
 
 		return chatRoom;
 	}
 
 	@Override
-	public ChatRoom updateImpl(com.rcs.service.model.ChatRoom chatRoom,
-		boolean merge) throws SystemException {
+	public ChatRoom updateImpl(com.rcs.service.model.ChatRoom chatRoom)
+		throws SystemException {
 		chatRoom = toUnwrappedModel(chatRoom);
+
+		boolean isNew = chatRoom.isNew();
 
 		Session session = null;
 
 		try {
 			session = openSession();
 
-			BatchSessionUtil.update(session, chatRoom, merge);
+			if (chatRoom.isNew()) {
+				session.save(chatRoom);
 
-			chatRoom.setNew(false);
+				chatRoom.setNew(false);
+			}
+			else {
+				session.merge(chatRoom);
+			}
 		}
 		catch (Exception e) {
 			throw processException(e);
@@ -276,6 +296,10 @@ public class ChatRoomPersistenceImpl extends BasePersistenceImpl<ChatRoom>
 		}
 
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+
+		if (isNew) {
+			FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+		}
 
 		EntityCacheUtil.putResult(ChatRoomModelImpl.ENTITY_CACHE_ENABLED,
 			ChatRoomImpl.class, chatRoom.getPrimaryKey(), chatRoom);
@@ -312,13 +336,24 @@ public class ChatRoomPersistenceImpl extends BasePersistenceImpl<ChatRoom>
 	 *
 	 * @param primaryKey the primary key of the chat room
 	 * @return the chat room
-	 * @throws com.liferay.portal.NoSuchModelException if a chat room with the primary key could not be found
+	 * @throws com.rcs.service.NoSuchChatRoomException if a chat room with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public ChatRoom findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchChatRoomException, SystemException {
+		ChatRoom chatRoom = fetchByPrimaryKey(primaryKey);
+
+		if (chatRoom == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchChatRoomException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return chatRoom;
 	}
 
 	/**
@@ -329,20 +364,10 @@ public class ChatRoomPersistenceImpl extends BasePersistenceImpl<ChatRoom>
 	 * @throws com.rcs.service.NoSuchChatRoomException if a chat room with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public ChatRoom findByPrimaryKey(long chatRoomId)
 		throws NoSuchChatRoomException, SystemException {
-		ChatRoom chatRoom = fetchByPrimaryKey(chatRoomId);
-
-		if (chatRoom == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + chatRoomId);
-			}
-
-			throw new NoSuchChatRoomException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				chatRoomId);
-		}
-
-		return chatRoom;
+		return findByPrimaryKey((Serializable)chatRoomId);
 	}
 
 	/**
@@ -355,7 +380,41 @@ public class ChatRoomPersistenceImpl extends BasePersistenceImpl<ChatRoom>
 	@Override
 	public ChatRoom fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
+		ChatRoom chatRoom = (ChatRoom)EntityCacheUtil.getResult(ChatRoomModelImpl.ENTITY_CACHE_ENABLED,
+				ChatRoomImpl.class, primaryKey);
+
+		if (chatRoom == _nullChatRoom) {
+			return null;
+		}
+
+		if (chatRoom == null) {
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				chatRoom = (ChatRoom)session.get(ChatRoomImpl.class, primaryKey);
+
+				if (chatRoom != null) {
+					cacheResult(chatRoom);
+				}
+				else {
+					EntityCacheUtil.putResult(ChatRoomModelImpl.ENTITY_CACHE_ENABLED,
+						ChatRoomImpl.class, primaryKey, _nullChatRoom);
+				}
+			}
+			catch (Exception e) {
+				EntityCacheUtil.removeResult(ChatRoomModelImpl.ENTITY_CACHE_ENABLED,
+					ChatRoomImpl.class, primaryKey);
+
+				throw processException(e);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return chatRoom;
 	}
 
 	/**
@@ -365,45 +424,10 @@ public class ChatRoomPersistenceImpl extends BasePersistenceImpl<ChatRoom>
 	 * @return the chat room, or <code>null</code> if a chat room with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public ChatRoom fetchByPrimaryKey(long chatRoomId)
 		throws SystemException {
-		ChatRoom chatRoom = (ChatRoom)EntityCacheUtil.getResult(ChatRoomModelImpl.ENTITY_CACHE_ENABLED,
-				ChatRoomImpl.class, chatRoomId);
-
-		if (chatRoom == _nullChatRoom) {
-			return null;
-		}
-
-		if (chatRoom == null) {
-			Session session = null;
-
-			boolean hasException = false;
-
-			try {
-				session = openSession();
-
-				chatRoom = (ChatRoom)session.get(ChatRoomImpl.class,
-						Long.valueOf(chatRoomId));
-			}
-			catch (Exception e) {
-				hasException = true;
-
-				throw processException(e);
-			}
-			finally {
-				if (chatRoom != null) {
-					cacheResult(chatRoom);
-				}
-				else if (!hasException) {
-					EntityCacheUtil.putResult(ChatRoomModelImpl.ENTITY_CACHE_ENABLED,
-						ChatRoomImpl.class, chatRoomId, _nullChatRoom);
-				}
-
-				closeSession(session);
-			}
-		}
-
-		return chatRoom;
+		return fetchByPrimaryKey((Serializable)chatRoomId);
 	}
 
 	/**
@@ -412,6 +436,7 @@ public class ChatRoomPersistenceImpl extends BasePersistenceImpl<ChatRoom>
 	 * @return the chat rooms
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public List<ChatRoom> findAll() throws SystemException {
 		return findAll(QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
 	}
@@ -420,7 +445,7 @@ public class ChatRoomPersistenceImpl extends BasePersistenceImpl<ChatRoom>
 	 * Returns a range of all the chat rooms.
 	 *
 	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link com.rcs.service.model.impl.ChatRoomModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
 	 * @param start the lower bound of the range of chat rooms
@@ -428,6 +453,7 @@ public class ChatRoomPersistenceImpl extends BasePersistenceImpl<ChatRoom>
 	 * @return the range of chat rooms
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public List<ChatRoom> findAll(int start, int end) throws SystemException {
 		return findAll(start, end, null);
 	}
@@ -436,7 +462,7 @@ public class ChatRoomPersistenceImpl extends BasePersistenceImpl<ChatRoom>
 	 * Returns an ordered range of all the chat rooms.
 	 *
 	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link com.rcs.service.model.impl.ChatRoomModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
 	 * @param start the lower bound of the range of chat rooms
@@ -445,18 +471,21 @@ public class ChatRoomPersistenceImpl extends BasePersistenceImpl<ChatRoom>
 	 * @return the ordered range of chat rooms
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public List<ChatRoom> findAll(int start, int end,
 		OrderByComparator orderByComparator) throws SystemException {
+		boolean pagination = true;
 		FinderPath finderPath = null;
-		Object[] finderArgs = new Object[] { start, end, orderByComparator };
+		Object[] finderArgs = null;
 
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
-			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_ALL;
+			pagination = false;
+			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_ALL;
 			finderArgs = FINDER_ARGS_EMPTY;
 		}
 		else {
-			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_ALL;
+			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_ALL;
 			finderArgs = new Object[] { start, end, orderByComparator };
 		}
 
@@ -479,7 +508,11 @@ public class ChatRoomPersistenceImpl extends BasePersistenceImpl<ChatRoom>
 				sql = query.toString();
 			}
 			else {
-				sql = _SQL_SELECT_CHATROOM.concat(ChatRoomModelImpl.ORDER_BY_JPQL);
+				sql = _SQL_SELECT_CHATROOM;
+
+				if (pagination) {
+					sql = sql.concat(ChatRoomModelImpl.ORDER_BY_JPQL);
+				}
 			}
 
 			Session session = null;
@@ -489,30 +522,29 @@ public class ChatRoomPersistenceImpl extends BasePersistenceImpl<ChatRoom>
 
 				Query q = session.createQuery(sql);
 
-				if (orderByComparator == null) {
+				if (!pagination) {
 					list = (List<ChatRoom>)QueryUtil.list(q, getDialect(),
 							start, end, false);
 
 					Collections.sort(list);
+
+					list = new UnmodifiableList<ChatRoom>(list);
 				}
 				else {
 					list = (List<ChatRoom>)QueryUtil.list(q, getDialect(),
 							start, end);
 				}
+
+				cacheResult(list);
+
+				FinderCacheUtil.putResult(finderPath, finderArgs, list);
 			}
 			catch (Exception e) {
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
+
 				throw processException(e);
 			}
 			finally {
-				if (list == null) {
-					FinderCacheUtil.removeResult(finderPath, finderArgs);
-				}
-				else {
-					cacheResult(list);
-
-					FinderCacheUtil.putResult(finderPath, finderArgs, list);
-				}
-
 				closeSession(session);
 			}
 		}
@@ -525,6 +557,7 @@ public class ChatRoomPersistenceImpl extends BasePersistenceImpl<ChatRoom>
 	 *
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public void removeAll() throws SystemException {
 		for (ChatRoom chatRoom : findAll()) {
 			remove(chatRoom);
@@ -537,6 +570,7 @@ public class ChatRoomPersistenceImpl extends BasePersistenceImpl<ChatRoom>
 	 * @return the number of chat rooms
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public int countAll() throws SystemException {
 		Long count = (Long)FinderCacheUtil.getResult(FINDER_PATH_COUNT_ALL,
 				FINDER_ARGS_EMPTY, this);
@@ -550,18 +584,17 @@ public class ChatRoomPersistenceImpl extends BasePersistenceImpl<ChatRoom>
 				Query q = session.createQuery(_SQL_COUNT_CHATROOM);
 
 				count = (Long)q.uniqueResult();
-			}
-			catch (Exception e) {
-				throw processException(e);
-			}
-			finally {
-				if (count == null) {
-					count = Long.valueOf(0);
-				}
 
 				FinderCacheUtil.putResult(FINDER_PATH_COUNT_ALL,
 					FINDER_ARGS_EMPTY, count);
+			}
+			catch (Exception e) {
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_ALL,
+					FINDER_ARGS_EMPTY);
 
+				throw processException(e);
+			}
+			finally {
 				closeSession(session);
 			}
 		}
@@ -583,7 +616,7 @@ public class ChatRoomPersistenceImpl extends BasePersistenceImpl<ChatRoom>
 
 				for (String listenerClassName : listenerClassNames) {
 					listenersList.add((ModelListener<ChatRoom>)InstanceFactory.newInstance(
-							listenerClassName));
+							getClassLoader(), listenerClassName));
 				}
 
 				listeners = listenersList.toArray(new ModelListener[listenersList.size()]);
@@ -597,19 +630,10 @@ public class ChatRoomPersistenceImpl extends BasePersistenceImpl<ChatRoom>
 	public void destroy() {
 		EntityCacheUtil.removeCache(ChatRoomImpl.class.getName());
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_ENTITY);
+		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = ChatRoomPersistence.class)
-	protected ChatRoomPersistence chatRoomPersistence;
-	@BeanReference(type = ChatRoomGroupPersistence.class)
-	protected ChatRoomGroupPersistence chatRoomGroupPersistence;
-	@BeanReference(type = ConfigurationPersistence.class)
-	protected ConfigurationPersistence configurationPersistence;
-	@BeanReference(type = ResourcePersistence.class)
-	protected ResourcePersistence resourcePersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
 	private static final String _SQL_SELECT_CHATROOM = "SELECT chatRoom FROM ChatRoom chatRoom";
 	private static final String _SQL_COUNT_CHATROOM = "SELECT COUNT(chatRoom) FROM ChatRoom chatRoom";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "chatRoom.";
@@ -630,6 +654,7 @@ public class ChatRoomPersistenceImpl extends BasePersistenceImpl<ChatRoom>
 		};
 
 	private static CacheModel<ChatRoom> _nullChatRoomCacheModel = new CacheModel<ChatRoom>() {
+			@Override
 			public ChatRoom toEntityModel() {
 				return _nullChatRoom;
 			}

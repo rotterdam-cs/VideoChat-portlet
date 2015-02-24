@@ -25,8 +25,9 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.model.User;
 import com.liferay.portal.util.PortalUtil;
-import com.opentok.api.OpenTokSDK;
-import com.opentok.api.constants.RoleConstants;
+import com.opentok.OpenTok;
+import com.opentok.Role;
+import com.opentok.TokenOptions;
 import com.rcs.common.LocalResponse;
 import com.rcs.common.ResourceBundleHelper;
 import com.rcs.common.UserData;
@@ -99,15 +100,22 @@ public class VideoChatController {
 		LocalResponse result = new LocalResponse();
 				
 		// Generate a token. The user needs a token to be able to connect to the chatroom.		
-		OpenTokSDK sdk = new OpenTokSDK(Integer.parseInt(ConfigurationLocalServiceUtil.getApiKey()), ConfigurationLocalServiceUtil.getApiSecret());
+		OpenTok opentok = new OpenTok(Integer.parseInt(ConfigurationLocalServiceUtil.getApiKey()), ConfigurationLocalServiceUtil.getApiSecret());
 		User user = PortalUtil.getUser(request);
         String userEmail = "";
         if(user!=null) {
         	userEmail = PortalUtil.getUser(request).getEmailAddress();
         }	        
         String connectionMetadata = userEmail;
+
+
+        // Generate a token:
+        TokenOptions options = new com.opentok.TokenOptions.Builder().role(Role.PUBLISHER).data(connectionMetadata).build();        
+        
+        
+        
 		// Use the RoleConstants value appropriate for the user.
-		String token = sdk.generate_token(sessionId, RoleConstants.PUBLISHER, null, connectionMetadata);
+		String token = opentok.generateToken(sessionId,options);
 		result.setSuccess(true);
 		result.setMessage(token);        
         response.getWriter().write(utilsExpert.getJsonFromLocalResponse(result));        

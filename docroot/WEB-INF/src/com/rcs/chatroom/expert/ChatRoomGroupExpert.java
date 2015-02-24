@@ -9,15 +9,11 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.opentok.api.API_Config;
-import com.opentok.api.OpenTokSDK;
 import com.rcs.common.LocalResponse;
 import com.rcs.common.PortalInstanceIdentifier;
 import com.rcs.common.ServiceActionResult;
-import com.rcs.service.model.ChatRoom;
 import com.rcs.service.model.ChatRoomGroup;
 import com.rcs.service.service.ChatRoomGroupLocalServiceUtil;
-import com.rcs.service.service.ChatRoomLocalServiceUtil;
 import com.rcs.service.service.persistence.ChatRoomGroupPK;
 
 @Component
@@ -65,7 +61,7 @@ public class ChatRoomGroupExpert {
     }
 		
 	public boolean deleteChatRoomGroup(long chatRoomId, long chatRoomGroupId) {
-		ServiceActionResult resultDelete = null;
+
 		try {
 			ChatRoomGroupPK chatRoomGroupPK = new ChatRoomGroupPK(chatRoomId, chatRoomGroupId);
 			ChatRoomGroupLocalServiceUtil.deleteChatRoomGroup(chatRoomGroupPK);			

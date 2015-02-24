@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2012 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -14,8 +14,6 @@
 
 package com.rcs.service.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -31,13 +29,12 @@ import com.liferay.portal.kernel.util.InstanceFactory;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.PropsUtil;
+import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.util.UnmodifiableList;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.model.ModelListener;
-import com.liferay.portal.service.persistence.BatchSessionUtil;
-import com.liferay.portal.service.persistence.ResourcePersistence;
-import com.liferay.portal.service.persistence.UserPersistence;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
 import com.rcs.service.NoSuchConfigurationException;
@@ -50,6 +47,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 /**
  * The persistence implementation for the configuration service.
@@ -58,7 +56,7 @@ import java.util.List;
  * Caching information and settings can be found in <code>portal.properties</code>
  * </p>
  *
- * @author flor
+ * @author Flor|Ale
  * @see ConfigurationPersistence
  * @see ConfigurationUtil
  * @generated
@@ -77,21 +75,26 @@ public class ConfigurationPersistenceImpl extends BasePersistenceImpl<Configurat
 		".List2";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_ALL = new FinderPath(ConfigurationModelImpl.ENTITY_CACHE_ENABLED,
 			ConfigurationModelImpl.FINDER_CACHE_ENABLED,
-			ConfigurationImpl.class, FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
+			ConfigurationImpl.class, FINDER_CLASS_NAME_LIST_WITH_PAGINATION,
 			"findAll", new String[0]);
 	public static final FinderPath FINDER_PATH_WITHOUT_PAGINATION_FIND_ALL = new FinderPath(ConfigurationModelImpl.ENTITY_CACHE_ENABLED,
 			ConfigurationModelImpl.FINDER_CACHE_ENABLED,
-			ConfigurationImpl.class, FINDER_CLASS_NAME_LIST_WITH_PAGINATION,
+			ConfigurationImpl.class, FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
 			"findAll", new String[0]);
 	public static final FinderPath FINDER_PATH_COUNT_ALL = new FinderPath(ConfigurationModelImpl.ENTITY_CACHE_ENABLED,
 			ConfigurationModelImpl.FINDER_CACHE_ENABLED, Long.class,
 			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countAll", new String[0]);
+
+	public ConfigurationPersistenceImpl() {
+		setModelClass(Configuration.class);
+	}
 
 	/**
 	 * Caches the configuration in the entity cache if it is enabled.
 	 *
 	 * @param configuration the configuration
 	 */
+	@Override
 	public void cacheResult(Configuration configuration) {
 		EntityCacheUtil.putResult(ConfigurationModelImpl.ENTITY_CACHE_ENABLED,
 			ConfigurationImpl.class, configuration.getPrimaryKey(),
@@ -105,6 +108,7 @@ public class ConfigurationPersistenceImpl extends BasePersistenceImpl<Configurat
 	 *
 	 * @param configurations the configurations
 	 */
+	@Override
 	public void cacheResult(List<Configuration> configurations) {
 		for (Configuration configuration : configurations) {
 			if (EntityCacheUtil.getResult(
@@ -171,6 +175,7 @@ public class ConfigurationPersistenceImpl extends BasePersistenceImpl<Configurat
 	 * @param apiKey the primary key for the new configuration
 	 * @return the new configuration
 	 */
+	@Override
 	public Configuration create(String apiKey) {
 		Configuration configuration = new ConfigurationImpl();
 
@@ -188,6 +193,7 @@ public class ConfigurationPersistenceImpl extends BasePersistenceImpl<Configurat
 	 * @throws com.rcs.service.NoSuchConfigurationException if a configuration with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public Configuration remove(String apiKey)
 		throws NoSuchConfigurationException, SystemException {
 		return remove((Serializable)apiKey);
@@ -244,7 +250,14 @@ public class ConfigurationPersistenceImpl extends BasePersistenceImpl<Configurat
 		try {
 			session = openSession();
 
-			BatchSessionUtil.delete(session, configuration);
+			if (!session.contains(configuration)) {
+				configuration = (Configuration)session.get(ConfigurationImpl.class,
+						configuration.getPrimaryKeyObj());
+			}
+
+			if (configuration != null) {
+				session.delete(configuration);
+			}
 		}
 		catch (Exception e) {
 			throw processException(e);
@@ -253,25 +266,34 @@ public class ConfigurationPersistenceImpl extends BasePersistenceImpl<Configurat
 			closeSession(session);
 		}
 
-		clearCache(configuration);
+		if (configuration != null) {
+			clearCache(configuration);
+		}
 
 		return configuration;
 	}
 
 	@Override
 	public Configuration updateImpl(
-		com.rcs.service.model.Configuration configuration, boolean merge)
+		com.rcs.service.model.Configuration configuration)
 		throws SystemException {
 		configuration = toUnwrappedModel(configuration);
+
+		boolean isNew = configuration.isNew();
 
 		Session session = null;
 
 		try {
 			session = openSession();
 
-			BatchSessionUtil.update(session, configuration, merge);
+			if (configuration.isNew()) {
+				session.save(configuration);
 
-			configuration.setNew(false);
+				configuration.setNew(false);
+			}
+			else {
+				session.merge(configuration);
+			}
 		}
 		catch (Exception e) {
 			throw processException(e);
@@ -281,6 +303,10 @@ public class ConfigurationPersistenceImpl extends BasePersistenceImpl<Configurat
 		}
 
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+
+		if (isNew) {
+			FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+		}
 
 		EntityCacheUtil.putResult(ConfigurationModelImpl.ENTITY_CACHE_ENABLED,
 			ConfigurationImpl.class, configuration.getPrimaryKey(),
@@ -317,13 +343,24 @@ public class ConfigurationPersistenceImpl extends BasePersistenceImpl<Configurat
 	 *
 	 * @param primaryKey the primary key of the configuration
 	 * @return the configuration
-	 * @throws com.liferay.portal.NoSuchModelException if a configuration with the primary key could not be found
+	 * @throws com.rcs.service.NoSuchConfigurationException if a configuration with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public Configuration findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey((String)primaryKey);
+		throws NoSuchConfigurationException, SystemException {
+		Configuration configuration = fetchByPrimaryKey(primaryKey);
+
+		if (configuration == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchConfigurationException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return configuration;
 	}
 
 	/**
@@ -334,20 +371,10 @@ public class ConfigurationPersistenceImpl extends BasePersistenceImpl<Configurat
 	 * @throws com.rcs.service.NoSuchConfigurationException if a configuration with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public Configuration findByPrimaryKey(String apiKey)
 		throws NoSuchConfigurationException, SystemException {
-		Configuration configuration = fetchByPrimaryKey(apiKey);
-
-		if (configuration == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + apiKey);
-			}
-
-			throw new NoSuchConfigurationException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				apiKey);
-		}
-
-		return configuration;
+		return findByPrimaryKey((Serializable)apiKey);
 	}
 
 	/**
@@ -360,7 +387,42 @@ public class ConfigurationPersistenceImpl extends BasePersistenceImpl<Configurat
 	@Override
 	public Configuration fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey((String)primaryKey);
+		Configuration configuration = (Configuration)EntityCacheUtil.getResult(ConfigurationModelImpl.ENTITY_CACHE_ENABLED,
+				ConfigurationImpl.class, primaryKey);
+
+		if (configuration == _nullConfiguration) {
+			return null;
+		}
+
+		if (configuration == null) {
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				configuration = (Configuration)session.get(ConfigurationImpl.class,
+						primaryKey);
+
+				if (configuration != null) {
+					cacheResult(configuration);
+				}
+				else {
+					EntityCacheUtil.putResult(ConfigurationModelImpl.ENTITY_CACHE_ENABLED,
+						ConfigurationImpl.class, primaryKey, _nullConfiguration);
+				}
+			}
+			catch (Exception e) {
+				EntityCacheUtil.removeResult(ConfigurationModelImpl.ENTITY_CACHE_ENABLED,
+					ConfigurationImpl.class, primaryKey);
+
+				throw processException(e);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return configuration;
 	}
 
 	/**
@@ -370,45 +432,10 @@ public class ConfigurationPersistenceImpl extends BasePersistenceImpl<Configurat
 	 * @return the configuration, or <code>null</code> if a configuration with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public Configuration fetchByPrimaryKey(String apiKey)
 		throws SystemException {
-		Configuration configuration = (Configuration)EntityCacheUtil.getResult(ConfigurationModelImpl.ENTITY_CACHE_ENABLED,
-				ConfigurationImpl.class, apiKey);
-
-		if (configuration == _nullConfiguration) {
-			return null;
-		}
-
-		if (configuration == null) {
-			Session session = null;
-
-			boolean hasException = false;
-
-			try {
-				session = openSession();
-
-				configuration = (Configuration)session.get(ConfigurationImpl.class,
-						apiKey);
-			}
-			catch (Exception e) {
-				hasException = true;
-
-				throw processException(e);
-			}
-			finally {
-				if (configuration != null) {
-					cacheResult(configuration);
-				}
-				else if (!hasException) {
-					EntityCacheUtil.putResult(ConfigurationModelImpl.ENTITY_CACHE_ENABLED,
-						ConfigurationImpl.class, apiKey, _nullConfiguration);
-				}
-
-				closeSession(session);
-			}
-		}
-
-		return configuration;
+		return fetchByPrimaryKey((Serializable)apiKey);
 	}
 
 	/**
@@ -417,6 +444,7 @@ public class ConfigurationPersistenceImpl extends BasePersistenceImpl<Configurat
 	 * @return the configurations
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public List<Configuration> findAll() throws SystemException {
 		return findAll(QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
 	}
@@ -425,7 +453,7 @@ public class ConfigurationPersistenceImpl extends BasePersistenceImpl<Configurat
 	 * Returns a range of all the configurations.
 	 *
 	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link com.rcs.service.model.impl.ConfigurationModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
 	 * @param start the lower bound of the range of configurations
@@ -433,6 +461,7 @@ public class ConfigurationPersistenceImpl extends BasePersistenceImpl<Configurat
 	 * @return the range of configurations
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public List<Configuration> findAll(int start, int end)
 		throws SystemException {
 		return findAll(start, end, null);
@@ -442,7 +471,7 @@ public class ConfigurationPersistenceImpl extends BasePersistenceImpl<Configurat
 	 * Returns an ordered range of all the configurations.
 	 *
 	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link com.rcs.service.model.impl.ConfigurationModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
 	 * @param start the lower bound of the range of configurations
@@ -451,18 +480,21 @@ public class ConfigurationPersistenceImpl extends BasePersistenceImpl<Configurat
 	 * @return the ordered range of configurations
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public List<Configuration> findAll(int start, int end,
 		OrderByComparator orderByComparator) throws SystemException {
+		boolean pagination = true;
 		FinderPath finderPath = null;
-		Object[] finderArgs = new Object[] { start, end, orderByComparator };
+		Object[] finderArgs = null;
 
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
-			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_ALL;
+			pagination = false;
+			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_ALL;
 			finderArgs = FINDER_ARGS_EMPTY;
 		}
 		else {
-			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_ALL;
+			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_ALL;
 			finderArgs = new Object[] { start, end, orderByComparator };
 		}
 
@@ -486,6 +518,10 @@ public class ConfigurationPersistenceImpl extends BasePersistenceImpl<Configurat
 			}
 			else {
 				sql = _SQL_SELECT_CONFIGURATION;
+
+				if (pagination) {
+					sql = sql.concat(ConfigurationModelImpl.ORDER_BY_JPQL);
+				}
 			}
 
 			Session session = null;
@@ -495,30 +531,29 @@ public class ConfigurationPersistenceImpl extends BasePersistenceImpl<Configurat
 
 				Query q = session.createQuery(sql);
 
-				if (orderByComparator == null) {
+				if (!pagination) {
 					list = (List<Configuration>)QueryUtil.list(q, getDialect(),
 							start, end, false);
 
 					Collections.sort(list);
+
+					list = new UnmodifiableList<Configuration>(list);
 				}
 				else {
 					list = (List<Configuration>)QueryUtil.list(q, getDialect(),
 							start, end);
 				}
+
+				cacheResult(list);
+
+				FinderCacheUtil.putResult(finderPath, finderArgs, list);
 			}
 			catch (Exception e) {
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
+
 				throw processException(e);
 			}
 			finally {
-				if (list == null) {
-					FinderCacheUtil.removeResult(finderPath, finderArgs);
-				}
-				else {
-					cacheResult(list);
-
-					FinderCacheUtil.putResult(finderPath, finderArgs, list);
-				}
-
 				closeSession(session);
 			}
 		}
@@ -531,6 +566,7 @@ public class ConfigurationPersistenceImpl extends BasePersistenceImpl<Configurat
 	 *
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public void removeAll() throws SystemException {
 		for (Configuration configuration : findAll()) {
 			remove(configuration);
@@ -543,6 +579,7 @@ public class ConfigurationPersistenceImpl extends BasePersistenceImpl<Configurat
 	 * @return the number of configurations
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public int countAll() throws SystemException {
 		Long count = (Long)FinderCacheUtil.getResult(FINDER_PATH_COUNT_ALL,
 				FINDER_ARGS_EMPTY, this);
@@ -556,23 +593,27 @@ public class ConfigurationPersistenceImpl extends BasePersistenceImpl<Configurat
 				Query q = session.createQuery(_SQL_COUNT_CONFIGURATION);
 
 				count = (Long)q.uniqueResult();
-			}
-			catch (Exception e) {
-				throw processException(e);
-			}
-			finally {
-				if (count == null) {
-					count = Long.valueOf(0);
-				}
 
 				FinderCacheUtil.putResult(FINDER_PATH_COUNT_ALL,
 					FINDER_ARGS_EMPTY, count);
+			}
+			catch (Exception e) {
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_ALL,
+					FINDER_ARGS_EMPTY);
 
+				throw processException(e);
+			}
+			finally {
 				closeSession(session);
 			}
 		}
 
 		return count.intValue();
+	}
+
+	@Override
+	protected Set<String> getBadColumnNames() {
+		return _badColumnNames;
 	}
 
 	/**
@@ -589,7 +630,7 @@ public class ConfigurationPersistenceImpl extends BasePersistenceImpl<Configurat
 
 				for (String listenerClassName : listenerClassNames) {
 					listenersList.add((ModelListener<Configuration>)InstanceFactory.newInstance(
-							listenerClassName));
+							getClassLoader(), listenerClassName));
 				}
 
 				listeners = listenersList.toArray(new ModelListener[listenersList.size()]);
@@ -603,19 +644,10 @@ public class ConfigurationPersistenceImpl extends BasePersistenceImpl<Configurat
 	public void destroy() {
 		EntityCacheUtil.removeCache(ConfigurationImpl.class.getName());
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_ENTITY);
+		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = ChatRoomPersistence.class)
-	protected ChatRoomPersistence chatRoomPersistence;
-	@BeanReference(type = ChatRoomGroupPersistence.class)
-	protected ChatRoomGroupPersistence chatRoomGroupPersistence;
-	@BeanReference(type = ConfigurationPersistence.class)
-	protected ConfigurationPersistence configurationPersistence;
-	@BeanReference(type = ResourcePersistence.class)
-	protected ResourcePersistence resourcePersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
 	private static final String _SQL_SELECT_CONFIGURATION = "SELECT configuration FROM Configuration configuration";
 	private static final String _SQL_COUNT_CONFIGURATION = "SELECT COUNT(configuration) FROM Configuration configuration";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "configuration.";
@@ -623,6 +655,9 @@ public class ConfigurationPersistenceImpl extends BasePersistenceImpl<Configurat
 	private static final boolean _HIBERNATE_CACHE_USE_SECOND_LEVEL_CACHE = GetterUtil.getBoolean(PropsUtil.get(
 				PropsKeys.HIBERNATE_CACHE_USE_SECOND_LEVEL_CACHE));
 	private static Log _log = LogFactoryUtil.getLog(ConfigurationPersistenceImpl.class);
+	private static Set<String> _badColumnNames = SetUtil.fromArray(new String[] {
+				"type"
+			});
 	private static Configuration _nullConfiguration = new ConfigurationImpl() {
 			@Override
 			public Object clone() {
@@ -636,6 +671,7 @@ public class ConfigurationPersistenceImpl extends BasePersistenceImpl<Configurat
 		};
 
 	private static CacheModel<Configuration> _nullConfigurationCacheModel = new CacheModel<Configuration>() {
+			@Override
 			public Configuration toEntityModel() {
 				return _nullConfiguration;
 			}

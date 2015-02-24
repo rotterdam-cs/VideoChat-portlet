@@ -1,5 +1,3 @@
-//@author Prj.M@x <pablo.rendon@rotterdam-cs.com>
-
 //General Response Handler
 function getResponse(response, postdata){
     return getResponseTextInfo(response.responseText);      

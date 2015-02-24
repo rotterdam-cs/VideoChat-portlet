@@ -6,9 +6,9 @@ create table VideoChat_ChatRoom (
 	userName VARCHAR(75) null,
 	createDate DATE null,
 	modifiedDate DATE null,
-	sessionId VARCHAR(255) null,
+	sessionId VARCHAR(75) null,
 	name VARCHAR(75) null,
-	description VARCHAR(255) null
+	description VARCHAR(75) null
 );
 
 create table VideoChat_ChatRoomGroup (
@@ -32,6 +32,6 @@ create table VideoChat_Configuration (
 	userName VARCHAR(75) null,
 	createDate DATE null,
 	modifiedDate DATE null,
-	apiSecret VARCHAR(255) null,
+	apiSecret VARCHAR(75) null,
 	type_ INTEGER
 );

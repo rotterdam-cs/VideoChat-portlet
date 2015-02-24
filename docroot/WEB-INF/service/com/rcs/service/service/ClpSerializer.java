@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2012 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -14,8 +14,13 @@
 
 package com.rcs.service.service;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.io.unsync.UnsyncByteArrayInputStream;
+import com.liferay.portal.kernel.io.unsync.UnsyncByteArrayOutputStream;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.util.ClassLoaderObjectInputStream;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.BaseModel;
@@ -24,14 +29,17 @@ import com.rcs.service.model.ChatRoomClp;
 import com.rcs.service.model.ChatRoomGroupClp;
 import com.rcs.service.model.ConfigurationClp;
 
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 import java.lang.reflect.Method;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
- * @author Brian Wing Shun Chan
+ * @author Flor
+Ale
  */
 public class ClpSerializer {
 	public static String getServletContextName() {
@@ -92,10 +100,6 @@ public class ClpSerializer {
 		}
 	}
 
-	public static void setClassLoader(ClassLoader classLoader) {
-		_classLoader = classLoader;
-	}
-
 	public static Object translateInput(BaseModel<?> oldModel) {
 		Class<?> oldModelClass = oldModel.getClass();
 
@@ -129,286 +133,33 @@ public class ClpSerializer {
 	}
 
 	public static Object translateInputChatRoom(BaseModel<?> oldModel) {
-		ChatRoomClp oldCplModel = (ChatRoomClp)oldModel;
+		ChatRoomClp oldClpModel = (ChatRoomClp)oldModel;
 
-		Thread currentThread = Thread.currentThread();
+		BaseModel<?> newModel = oldClpModel.getChatRoomRemoteModel();
 
-		ClassLoader contextClassLoader = currentThread.getContextClassLoader();
+		newModel.setModelAttributes(oldClpModel.getModelAttributes());
 
-		try {
-			currentThread.setContextClassLoader(_classLoader);
-
-			try {
-				Class<?> newModelClass = Class.forName("com.rcs.service.model.impl.ChatRoomImpl",
-						true, _classLoader);
-
-				Object newModel = newModelClass.newInstance();
-
-				Method method0 = newModelClass.getMethod("setChatRoomId",
-						new Class[] { Long.TYPE });
-
-				Long value0 = new Long(oldCplModel.getChatRoomId());
-
-				method0.invoke(newModel, value0);
-
-				Method method1 = newModelClass.getMethod("setGroupId",
-						new Class[] { Long.TYPE });
-
-				Long value1 = new Long(oldCplModel.getGroupId());
-
-				method1.invoke(newModel, value1);
-
-				Method method2 = newModelClass.getMethod("setCompanyId",
-						new Class[] { Long.TYPE });
-
-				Long value2 = new Long(oldCplModel.getCompanyId());
-
-				method2.invoke(newModel, value2);
-
-				Method method3 = newModelClass.getMethod("setUserId",
-						new Class[] { Long.TYPE });
-
-				Long value3 = new Long(oldCplModel.getUserId());
-
-				method3.invoke(newModel, value3);
-
-				Method method4 = newModelClass.getMethod("setUserName",
-						new Class[] { String.class });
-
-				String value4 = oldCplModel.getUserName();
-
-				method4.invoke(newModel, value4);
-
-				Method method5 = newModelClass.getMethod("setCreateDate",
-						new Class[] { Date.class });
-
-				Date value5 = oldCplModel.getCreateDate();
-
-				method5.invoke(newModel, value5);
-
-				Method method6 = newModelClass.getMethod("setModifiedDate",
-						new Class[] { Date.class });
-
-				Date value6 = oldCplModel.getModifiedDate();
-
-				method6.invoke(newModel, value6);
-
-				Method method7 = newModelClass.getMethod("setSessionId",
-						new Class[] { String.class });
-
-				String value7 = oldCplModel.getSessionId();
-
-				method7.invoke(newModel, value7);
-
-				Method method8 = newModelClass.getMethod("setName",
-						new Class[] { String.class });
-
-				String value8 = oldCplModel.getName();
-
-				method8.invoke(newModel, value8);
-
-				Method method9 = newModelClass.getMethod("setDescription",
-						new Class[] { String.class });
-
-				String value9 = oldCplModel.getDescription();
-
-				method9.invoke(newModel, value9);
-
-				return newModel;
-			}
-			catch (Exception e) {
-				_log.error(e, e);
-			}
-		}
-		finally {
-			currentThread.setContextClassLoader(contextClassLoader);
-		}
-
-		return oldModel;
+		return newModel;
 	}
 
 	public static Object translateInputChatRoomGroup(BaseModel<?> oldModel) {
-		ChatRoomGroupClp oldCplModel = (ChatRoomGroupClp)oldModel;
+		ChatRoomGroupClp oldClpModel = (ChatRoomGroupClp)oldModel;
 
-		Thread currentThread = Thread.currentThread();
+		BaseModel<?> newModel = oldClpModel.getChatRoomGroupRemoteModel();
 
-		ClassLoader contextClassLoader = currentThread.getContextClassLoader();
+		newModel.setModelAttributes(oldClpModel.getModelAttributes());
 
-		try {
-			currentThread.setContextClassLoader(_classLoader);
-
-			try {
-				Class<?> newModelClass = Class.forName("com.rcs.service.model.impl.ChatRoomGroupImpl",
-						true, _classLoader);
-
-				Object newModel = newModelClass.newInstance();
-
-				Method method0 = newModelClass.getMethod("setChatRoomId",
-						new Class[] { Long.TYPE });
-
-				Long value0 = new Long(oldCplModel.getChatRoomId());
-
-				method0.invoke(newModel, value0);
-
-				Method method1 = newModelClass.getMethod("setChatRoomGroupId",
-						new Class[] { Long.TYPE });
-
-				Long value1 = new Long(oldCplModel.getChatRoomGroupId());
-
-				method1.invoke(newModel, value1);
-
-				Method method2 = newModelClass.getMethod("setGroupId",
-						new Class[] { Long.TYPE });
-
-				Long value2 = new Long(oldCplModel.getGroupId());
-
-				method2.invoke(newModel, value2);
-
-				Method method3 = newModelClass.getMethod("setCompanyId",
-						new Class[] { Long.TYPE });
-
-				Long value3 = new Long(oldCplModel.getCompanyId());
-
-				method3.invoke(newModel, value3);
-
-				Method method4 = newModelClass.getMethod("setUserId",
-						new Class[] { Long.TYPE });
-
-				Long value4 = new Long(oldCplModel.getUserId());
-
-				method4.invoke(newModel, value4);
-
-				Method method5 = newModelClass.getMethod("setUserName",
-						new Class[] { String.class });
-
-				String value5 = oldCplModel.getUserName();
-
-				method5.invoke(newModel, value5);
-
-				Method method6 = newModelClass.getMethod("setCreateDate",
-						new Class[] { Date.class });
-
-				Date value6 = oldCplModel.getCreateDate();
-
-				method6.invoke(newModel, value6);
-
-				Method method7 = newModelClass.getMethod("setModifiedDate",
-						new Class[] { Date.class });
-
-				Date value7 = oldCplModel.getModifiedDate();
-
-				method7.invoke(newModel, value7);
-
-				Method method8 = newModelClass.getMethod("setType",
-						new Class[] { Integer.TYPE });
-
-				Integer value8 = new Integer(oldCplModel.getType());
-
-				method8.invoke(newModel, value8);
-
-				return newModel;
-			}
-			catch (Exception e) {
-				_log.error(e, e);
-			}
-		}
-		finally {
-			currentThread.setContextClassLoader(contextClassLoader);
-		}
-
-		return oldModel;
+		return newModel;
 	}
 
 	public static Object translateInputConfiguration(BaseModel<?> oldModel) {
-		ConfigurationClp oldCplModel = (ConfigurationClp)oldModel;
+		ConfigurationClp oldClpModel = (ConfigurationClp)oldModel;
 
-		Thread currentThread = Thread.currentThread();
+		BaseModel<?> newModel = oldClpModel.getConfigurationRemoteModel();
 
-		ClassLoader contextClassLoader = currentThread.getContextClassLoader();
+		newModel.setModelAttributes(oldClpModel.getModelAttributes());
 
-		try {
-			currentThread.setContextClassLoader(_classLoader);
-
-			try {
-				Class<?> newModelClass = Class.forName("com.rcs.service.model.impl.ConfigurationImpl",
-						true, _classLoader);
-
-				Object newModel = newModelClass.newInstance();
-
-				Method method0 = newModelClass.getMethod("setApiKey",
-						new Class[] { String.class });
-
-				String value0 = oldCplModel.getApiKey();
-
-				method0.invoke(newModel, value0);
-
-				Method method1 = newModelClass.getMethod("setGroupId",
-						new Class[] { Long.TYPE });
-
-				Long value1 = new Long(oldCplModel.getGroupId());
-
-				method1.invoke(newModel, value1);
-
-				Method method2 = newModelClass.getMethod("setCompanyId",
-						new Class[] { Long.TYPE });
-
-				Long value2 = new Long(oldCplModel.getCompanyId());
-
-				method2.invoke(newModel, value2);
-
-				Method method3 = newModelClass.getMethod("setUserId",
-						new Class[] { Long.TYPE });
-
-				Long value3 = new Long(oldCplModel.getUserId());
-
-				method3.invoke(newModel, value3);
-
-				Method method4 = newModelClass.getMethod("setUserName",
-						new Class[] { String.class });
-
-				String value4 = oldCplModel.getUserName();
-
-				method4.invoke(newModel, value4);
-
-				Method method5 = newModelClass.getMethod("setCreateDate",
-						new Class[] { Date.class });
-
-				Date value5 = oldCplModel.getCreateDate();
-
-				method5.invoke(newModel, value5);
-
-				Method method6 = newModelClass.getMethod("setModifiedDate",
-						new Class[] { Date.class });
-
-				Date value6 = oldCplModel.getModifiedDate();
-
-				method6.invoke(newModel, value6);
-
-				Method method7 = newModelClass.getMethod("setApiSecret",
-						new Class[] { String.class });
-
-				String value7 = oldCplModel.getApiSecret();
-
-				method7.invoke(newModel, value7);
-
-				Method method8 = newModelClass.getMethod("setType",
-						new Class[] { Integer.TYPE });
-
-				Integer value8 = new Integer(oldCplModel.getType());
-
-				method8.invoke(newModel, value8);
-
-				return newModel;
-			}
-			catch (Exception e) {
-				_log.error(e, e);
-			}
-		}
-		finally {
-			currentThread.setContextClassLoader(contextClassLoader);
-		}
-
-		return oldModel;
+		return newModel;
 	}
 
 	public static Object translateInput(Object obj) {
@@ -469,255 +220,105 @@ public class ClpSerializer {
 		}
 	}
 
-	public static Object translateOutputChatRoom(BaseModel<?> oldModel) {
-		Thread currentThread = Thread.currentThread();
-
-		ClassLoader contextClassLoader = currentThread.getContextClassLoader();
-
-		try {
-			currentThread.setContextClassLoader(_classLoader);
-
+	public static Throwable translateThrowable(Throwable throwable) {
+		if (_useReflectionToTranslateThrowable) {
 			try {
-				ChatRoomClp newModel = new ChatRoomClp();
+				UnsyncByteArrayOutputStream unsyncByteArrayOutputStream = new UnsyncByteArrayOutputStream();
+				ObjectOutputStream objectOutputStream = new ObjectOutputStream(unsyncByteArrayOutputStream);
 
-				Class<?> oldModelClass = oldModel.getClass();
+				objectOutputStream.writeObject(throwable);
 
-				Method method0 = oldModelClass.getMethod("getChatRoomId");
+				objectOutputStream.flush();
+				objectOutputStream.close();
 
-				Long value0 = (Long)method0.invoke(oldModel, (Object[])null);
+				UnsyncByteArrayInputStream unsyncByteArrayInputStream = new UnsyncByteArrayInputStream(unsyncByteArrayOutputStream.unsafeGetByteArray(),
+						0, unsyncByteArrayOutputStream.size());
 
-				newModel.setChatRoomId(value0);
+				Thread currentThread = Thread.currentThread();
 
-				Method method1 = oldModelClass.getMethod("getGroupId");
+				ClassLoader contextClassLoader = currentThread.getContextClassLoader();
 
-				Long value1 = (Long)method1.invoke(oldModel, (Object[])null);
+				ObjectInputStream objectInputStream = new ClassLoaderObjectInputStream(unsyncByteArrayInputStream,
+						contextClassLoader);
 
-				newModel.setGroupId(value1);
+				throwable = (Throwable)objectInputStream.readObject();
 
-				Method method2 = oldModelClass.getMethod("getCompanyId");
+				objectInputStream.close();
 
-				Long value2 = (Long)method2.invoke(oldModel, (Object[])null);
-
-				newModel.setCompanyId(value2);
-
-				Method method3 = oldModelClass.getMethod("getUserId");
-
-				Long value3 = (Long)method3.invoke(oldModel, (Object[])null);
-
-				newModel.setUserId(value3);
-
-				Method method4 = oldModelClass.getMethod("getUserName");
-
-				String value4 = (String)method4.invoke(oldModel, (Object[])null);
-
-				newModel.setUserName(value4);
-
-				Method method5 = oldModelClass.getMethod("getCreateDate");
-
-				Date value5 = (Date)method5.invoke(oldModel, (Object[])null);
-
-				newModel.setCreateDate(value5);
-
-				Method method6 = oldModelClass.getMethod("getModifiedDate");
-
-				Date value6 = (Date)method6.invoke(oldModel, (Object[])null);
-
-				newModel.setModifiedDate(value6);
-
-				Method method7 = oldModelClass.getMethod("getSessionId");
-
-				String value7 = (String)method7.invoke(oldModel, (Object[])null);
-
-				newModel.setSessionId(value7);
-
-				Method method8 = oldModelClass.getMethod("getName");
-
-				String value8 = (String)method8.invoke(oldModel, (Object[])null);
-
-				newModel.setName(value8);
-
-				Method method9 = oldModelClass.getMethod("getDescription");
-
-				String value9 = (String)method9.invoke(oldModel, (Object[])null);
-
-				newModel.setDescription(value9);
-
-				return newModel;
+				return throwable;
 			}
-			catch (Exception e) {
-				_log.error(e, e);
+			catch (SecurityException se) {
+				if (_log.isInfoEnabled()) {
+					_log.info("Do not use reflection to translate throwable");
+				}
+
+				_useReflectionToTranslateThrowable = false;
+			}
+			catch (Throwable throwable2) {
+				_log.error(throwable2, throwable2);
+
+				return throwable2;
 			}
 		}
-		finally {
-			currentThread.setContextClassLoader(contextClassLoader);
+
+		Class<?> clazz = throwable.getClass();
+
+		String className = clazz.getName();
+
+		if (className.equals(PortalException.class.getName())) {
+			return new PortalException();
 		}
 
-		return oldModel;
+		if (className.equals(SystemException.class.getName())) {
+			return new SystemException();
+		}
+
+		if (className.equals("com.rcs.service.NoSuchChatRoomException")) {
+			return new com.rcs.service.NoSuchChatRoomException();
+		}
+
+		if (className.equals("com.rcs.service.NoSuchChatRoomGroupException")) {
+			return new com.rcs.service.NoSuchChatRoomGroupException();
+		}
+
+		if (className.equals("com.rcs.service.NoSuchConfigurationException")) {
+			return new com.rcs.service.NoSuchConfigurationException();
+		}
+
+		return throwable;
+	}
+
+	public static Object translateOutputChatRoom(BaseModel<?> oldModel) {
+		ChatRoomClp newModel = new ChatRoomClp();
+
+		newModel.setModelAttributes(oldModel.getModelAttributes());
+
+		newModel.setChatRoomRemoteModel(oldModel);
+
+		return newModel;
 	}
 
 	public static Object translateOutputChatRoomGroup(BaseModel<?> oldModel) {
-		Thread currentThread = Thread.currentThread();
+		ChatRoomGroupClp newModel = new ChatRoomGroupClp();
 
-		ClassLoader contextClassLoader = currentThread.getContextClassLoader();
+		newModel.setModelAttributes(oldModel.getModelAttributes());
 
-		try {
-			currentThread.setContextClassLoader(_classLoader);
+		newModel.setChatRoomGroupRemoteModel(oldModel);
 
-			try {
-				ChatRoomGroupClp newModel = new ChatRoomGroupClp();
-
-				Class<?> oldModelClass = oldModel.getClass();
-
-				Method method0 = oldModelClass.getMethod("getChatRoomId");
-
-				Long value0 = (Long)method0.invoke(oldModel, (Object[])null);
-
-				newModel.setChatRoomId(value0);
-
-				Method method1 = oldModelClass.getMethod("getChatRoomGroupId");
-
-				Long value1 = (Long)method1.invoke(oldModel, (Object[])null);
-
-				newModel.setChatRoomGroupId(value1);
-
-				Method method2 = oldModelClass.getMethod("getGroupId");
-
-				Long value2 = (Long)method2.invoke(oldModel, (Object[])null);
-
-				newModel.setGroupId(value2);
-
-				Method method3 = oldModelClass.getMethod("getCompanyId");
-
-				Long value3 = (Long)method3.invoke(oldModel, (Object[])null);
-
-				newModel.setCompanyId(value3);
-
-				Method method4 = oldModelClass.getMethod("getUserId");
-
-				Long value4 = (Long)method4.invoke(oldModel, (Object[])null);
-
-				newModel.setUserId(value4);
-
-				Method method5 = oldModelClass.getMethod("getUserName");
-
-				String value5 = (String)method5.invoke(oldModel, (Object[])null);
-
-				newModel.setUserName(value5);
-
-				Method method6 = oldModelClass.getMethod("getCreateDate");
-
-				Date value6 = (Date)method6.invoke(oldModel, (Object[])null);
-
-				newModel.setCreateDate(value6);
-
-				Method method7 = oldModelClass.getMethod("getModifiedDate");
-
-				Date value7 = (Date)method7.invoke(oldModel, (Object[])null);
-
-				newModel.setModifiedDate(value7);
-
-				Method method8 = oldModelClass.getMethod("getType");
-
-				Integer value8 = (Integer)method8.invoke(oldModel,
-						(Object[])null);
-
-				newModel.setType(value8);
-
-				return newModel;
-			}
-			catch (Exception e) {
-				_log.error(e, e);
-			}
-		}
-		finally {
-			currentThread.setContextClassLoader(contextClassLoader);
-		}
-
-		return oldModel;
+		return newModel;
 	}
 
 	public static Object translateOutputConfiguration(BaseModel<?> oldModel) {
-		Thread currentThread = Thread.currentThread();
+		ConfigurationClp newModel = new ConfigurationClp();
 
-		ClassLoader contextClassLoader = currentThread.getContextClassLoader();
+		newModel.setModelAttributes(oldModel.getModelAttributes());
 
-		try {
-			currentThread.setContextClassLoader(_classLoader);
+		newModel.setConfigurationRemoteModel(oldModel);
 
-			try {
-				ConfigurationClp newModel = new ConfigurationClp();
-
-				Class<?> oldModelClass = oldModel.getClass();
-
-				Method method0 = oldModelClass.getMethod("getApiKey");
-
-				String value0 = (String)method0.invoke(oldModel, (Object[])null);
-
-				newModel.setApiKey(value0);
-
-				Method method1 = oldModelClass.getMethod("getGroupId");
-
-				Long value1 = (Long)method1.invoke(oldModel, (Object[])null);
-
-				newModel.setGroupId(value1);
-
-				Method method2 = oldModelClass.getMethod("getCompanyId");
-
-				Long value2 = (Long)method2.invoke(oldModel, (Object[])null);
-
-				newModel.setCompanyId(value2);
-
-				Method method3 = oldModelClass.getMethod("getUserId");
-
-				Long value3 = (Long)method3.invoke(oldModel, (Object[])null);
-
-				newModel.setUserId(value3);
-
-				Method method4 = oldModelClass.getMethod("getUserName");
-
-				String value4 = (String)method4.invoke(oldModel, (Object[])null);
-
-				newModel.setUserName(value4);
-
-				Method method5 = oldModelClass.getMethod("getCreateDate");
-
-				Date value5 = (Date)method5.invoke(oldModel, (Object[])null);
-
-				newModel.setCreateDate(value5);
-
-				Method method6 = oldModelClass.getMethod("getModifiedDate");
-
-				Date value6 = (Date)method6.invoke(oldModel, (Object[])null);
-
-				newModel.setModifiedDate(value6);
-
-				Method method7 = oldModelClass.getMethod("getApiSecret");
-
-				String value7 = (String)method7.invoke(oldModel, (Object[])null);
-
-				newModel.setApiSecret(value7);
-
-				Method method8 = oldModelClass.getMethod("getType");
-
-				Integer value8 = (Integer)method8.invoke(oldModel,
-						(Object[])null);
-
-				newModel.setType(value8);
-
-				return newModel;
-			}
-			catch (Exception e) {
-				_log.error(e, e);
-			}
-		}
-		finally {
-			currentThread.setContextClassLoader(contextClassLoader);
-		}
-
-		return oldModel;
+		return newModel;
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(ClpSerializer.class);
-	private static ClassLoader _classLoader;
 	private static String _servletContextName;
+	private static boolean _useReflectionToTranslateThrowable = true;
 }

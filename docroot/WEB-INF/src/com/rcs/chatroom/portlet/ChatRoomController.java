@@ -11,7 +11,6 @@ import javax.portlet.PortletResponse;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,18 +21,9 @@ import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.language.LanguageUtil;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
-import com.liferay.portal.model.Company;
 import com.liferay.portal.model.Group;
-import com.liferay.portal.model.Organization;
-import com.liferay.portal.service.CompanyLocalServiceUtil;
 import com.liferay.portal.service.GroupLocalServiceUtil;
-import com.liferay.portal.service.OrganizationLocalServiceUtil;
-import com.liferay.portal.service.UserLocalServiceUtil;
-import com.liferay.portal.service.WebsiteLocalServiceUtil;
-import com.liferay.portal.util.comparator.GroupTypeComparator;
 import com.rcs.chatroom.expert.ChatRoomExpert;
 import com.rcs.chatroom.expert.ChatRoomGroupExpert;
 import com.rcs.common.LocalResponse;
@@ -47,18 +37,14 @@ import com.rcs.service.model.Configuration;
 import com.rcs.service.service.ChatRoomGroupLocalServiceUtil;
 import com.rcs.service.service.ChatRoomLocalServiceUtil;
 import com.rcs.service.service.ConfigurationLocalServiceUtil;
-import com.rcs.service.service.impl.ChatRoomGroupLocalServiceImpl;
-import com.rcs.service.service.persistence.ChatRoomGroupPersistenceImpl;
-import com.rcs.service.service.persistence.ChatRoomGroupUtil;
 
 @Controller(value="ChatRoomController")
 @RequestMapping("VIEW")
 public class ChatRoomController {
 
-	private static Log log = LogFactoryUtil.getLog(ChatRoomController.class);
 	private PortalInstanceIdentifier pII;
 	private Locale locale;	
-	private boolean authorized;
+	//private boolean authorized;
 		
     private UtilsExpert utilsExpert = new UtilsExpert();
 		
@@ -75,7 +61,14 @@ public class ChatRoomController {
 	 */
 	@RenderMapping
 	public ModelAndView resolveView(PortletRequest request, PortletResponse response) throws PortalException, SystemException {
-		return new ModelAndView("/WEB-INF/views/chatroom/chatrooms.jsp");
+	    HashMap<String, Object> model = new HashMap<String, Object>();		            
+	    List<Configuration> configurations = ConfigurationLocalServiceUtil.getConfigurations(0,1);
+    	if(configurations.size() == 0) {        		
+    		model.put("enableChatRoomConfiguration", false);
+    	} else {
+    		model.put("enableChatRoomConfiguration", true);
+    	}
+		return new ModelAndView("chatroom/chatrooms", model);
 	}
 	
 	@ResourceMapping(value = "adminSections")
@@ -87,42 +80,47 @@ public class ChatRoomController {
 	    HashMap<String, Object> model = new HashMap<String, Object>();		            
 	    //Configuration
 	    List<Configuration> configurations = ConfigurationLocalServiceUtil.getConfigurations(0,1);
-        if (section.equals("configuration")) {       	        	        
-        	if(configurations.size() > 0) {
-        		Configuration configuration = configurations.get(0);
-        		model.put("apiKey", configuration.getApiKey());
-        		model.put("apiSecret", configuration.getApiSecret());
-        		model.put("type", configuration.getType());
-        	} 
-        //View Configuration
-        } else if (section.equals("chatroomsOverview")) {        	        	        	    		
+        if (section != null) {    
+	        if (section.equals("configuration")) {       	        	        
+	        	if(configurations.size() > 0) {
+	        		Configuration configuration = configurations.get(0);
+	        		model.put("apiKey", configuration.getApiKey());
+	        		model.put("apiSecret", configuration.getApiSecret());
+	        		model.put("type", configuration.getType());
+	        	} 
+	        //View Configuration
+	        } else if (section.equals("chatroomsOverview")) {        	        	        	    		
+	        	if(configurations.size() == 0) {        		
+	        		return new ModelAndView("chatroom/configuration", model);
+	        	}        	
+				List<ChatRoom> chatRooms = ChatRoomLocalServiceUtil.getChatRooms(0, ChatRoomLocalServiceUtil.getChatRoomsCount());
+				model.put("chatRooms", chatRooms);
+	        }
+        } else {
         	if(configurations.size() == 0) {        		
-        		/*locale = LocaleUtil.fromLanguageId(LanguageUtil.getLanguageId(request));        		
-        		String message = ResourceBundleHelper.getKeyLocalizedValue("com.rcs.admin.chatroom.overview.info", locale);
-        		model.put("errorMessage", message);*/                
-        		return new ModelAndView("/WEB-INF/views/chatroom/configuration.jsp", model);
+        		return new ModelAndView("chatroom/configuration", model);
         	}        	
 			List<ChatRoom> chatRooms = ChatRoomLocalServiceUtil.getChatRooms(0, ChatRoomLocalServiceUtil.getChatRoomsCount());
 			model.put("chatRooms", chatRooms);
-        } 
-        return new ModelAndView("/WEB-INF/views/chatroom/" + section + ".jsp", model);       
+			return new ModelAndView("chatroom/chatroomsOverview", model);
+        }
+        return new ModelAndView("chatroom/" + section, model);       
     }
 	
 	@ResourceMapping(value = "showChatRooms")
 	public ModelAndView showChatRoomsController(ResourceRequest request,ResourceResponse response) throws PortalException, SystemException {
 		Map<String, Object> model = new HashMap<String, Object>();				
 		if(ConfigurationLocalServiceUtil.getConfigurationsCount() == 0) {
-			return new ModelAndView("/WEB-INF/views/chatroom/configuration.jsp", model);
+			return new ModelAndView("chatroom/configuration", model);
 		}
 		// get chat rooms
 		try {			
 			List<ChatRoom> chatRooms = ChatRoomLocalServiceUtil.getChatRooms(0, ChatRoomLocalServiceUtil.getChatRoomsCount());
 			model.put("chatRooms", chatRooms);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 		
-		return new ModelAndView("/WEB-INF/views/chatroom/chatroomsOverview.jsp", model);
+		return new ModelAndView("chatroom/chatrooms", model);
 	}
 	
 	/**
@@ -155,10 +153,9 @@ public class ChatRoomController {
 				model.put("selectedGroups", selectedGroups);
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        return new ModelAndView("/WEB-INF/views/chatroom/edit.jsp", model);	
+        return new ModelAndView("chatroom/edit", model);	
 	}
 	
 	/**
@@ -256,20 +253,23 @@ public class ChatRoomController {
 	@ResourceMapping(value = "saveConfiguration")
     public ModelAndView saveConfigurationController(
     		String apiKey
-            ,String apiSecret                   //
+            ,String apiSecret
+            ,String typeSelect
             ,ResourceRequest request
             ,ResourceResponse response
     ) throws Exception {
 		pII = utilsExpert.getPortalInstanceIdentifier(request);
 		LocalResponse result = new LocalResponse();					
 		locale = LocaleUtil.fromLanguageId(LanguageUtil.getLanguageId(request));
-		String type = request.getParameter("type");			
+		//String type = request.getParameter("type");			
 		// save chat room		
-		Configuration configuration = ConfigurationLocalServiceUtil.updateConfiguration(pII.getUserId(), apiKey, apiSecret, Integer.parseInt(type));                              
-        result.setSuccess(true);        
+		Configuration configuration = ConfigurationLocalServiceUtil.updateConfiguration(pII.getUserId(), apiKey, apiSecret, Integer.parseInt(typeSelect));                              
+        if (configuration.getPrimaryKey() != null) {
+        	result.setSuccess(true);
+        }
         String message = ResourceBundleHelper.getKeyLocalizedValue("com.rcs.admin.configuration.saved.info", locale);            
         result.setMessage(message);        
         response.getWriter().write(utilsExpert.getJsonFromLocalResponse(result));
-        return null;	
+		return null;	
 	}
 }

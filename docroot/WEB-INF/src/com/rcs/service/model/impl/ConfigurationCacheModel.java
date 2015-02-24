@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2012 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -20,19 +20,22 @@ import com.liferay.portal.model.CacheModel;
 
 import com.rcs.service.model.Configuration;
 
-import java.io.Serializable;
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 
 import java.util.Date;
 
 /**
  * The cache model class for representing Configuration in entity cache.
  *
- * @author flor
+ * @author Flor|Ale
  * @see Configuration
  * @generated
  */
 public class ConfigurationCacheModel implements CacheModel<Configuration>,
-	Serializable {
+	Externalizable {
 	@Override
 	public String toString() {
 		StringBundler sb = new StringBundler(19);
@@ -60,6 +63,7 @@ public class ConfigurationCacheModel implements CacheModel<Configuration>,
 		return sb.toString();
 	}
 
+	@Override
 	public Configuration toEntityModel() {
 		ConfigurationImpl configurationImpl = new ConfigurationImpl();
 
@@ -107,6 +111,53 @@ public class ConfigurationCacheModel implements CacheModel<Configuration>,
 		configurationImpl.resetOriginalValues();
 
 		return configurationImpl;
+	}
+
+	@Override
+	public void readExternal(ObjectInput objectInput) throws IOException {
+		apiKey = objectInput.readUTF();
+		groupId = objectInput.readLong();
+		companyId = objectInput.readLong();
+		userId = objectInput.readLong();
+		userName = objectInput.readUTF();
+		createDate = objectInput.readLong();
+		modifiedDate = objectInput.readLong();
+		apiSecret = objectInput.readUTF();
+		type = objectInput.readInt();
+	}
+
+	@Override
+	public void writeExternal(ObjectOutput objectOutput)
+		throws IOException {
+		if (apiKey == null) {
+			objectOutput.writeUTF(StringPool.BLANK);
+		}
+		else {
+			objectOutput.writeUTF(apiKey);
+		}
+
+		objectOutput.writeLong(groupId);
+		objectOutput.writeLong(companyId);
+		objectOutput.writeLong(userId);
+
+		if (userName == null) {
+			objectOutput.writeUTF(StringPool.BLANK);
+		}
+		else {
+			objectOutput.writeUTF(userName);
+		}
+
+		objectOutput.writeLong(createDate);
+		objectOutput.writeLong(modifiedDate);
+
+		if (apiSecret == null) {
+			objectOutput.writeUTF(StringPool.BLANK);
+		}
+		else {
+			objectOutput.writeUTF(apiSecret);
+		}
+
+		objectOutput.writeInt(type);
 	}
 
 	public String apiKey;

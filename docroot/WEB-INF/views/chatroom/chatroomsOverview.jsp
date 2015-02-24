@@ -14,6 +14,7 @@
 <portlet:resourceURL var="editChatRoomURL" id="editChatRoom" />
 <portlet:resourceURL var="deleteChatRoomURL" id="deleteChatRoom" />
 <portlet:resourceURL var="showChatRoomsURL" id="showChatRooms" />
+<portlet:resourceURL var="adminSectionsURL" id="adminSections" />
 <div id="chat-rooms-overview-help-content" class="yui3-widget component helpbox">
 	<div class="portlet-description helpbox-content" data-visible-panel="true">		
 		<fmt:message key="com.rcs.admin.chat.rooms.overview.message"/>
@@ -51,9 +52,34 @@
 	</table>
 </div>
 
+<%--
+    Dialogs
+    ##################
+--%>
+<div style="display:none">
+    <div id="delete-dialog<portlet:namespace/>" title="<fmt:message key="com.rcs.admin.chatroom.confirm.delete.chatroom.title"/>">
+        <fmt:message key="com.rcs.admin.chatroom.confirm.delete.chatroom.body"/>
+    </div>
+</div>
+
 <script type="text/javascript">
 
-jQuery(function() {
+function loadChatRooms() {
+	jQuery("#<portlet:namespace/>chat-rooms").load("${adminSectionsURL}"
+         ,{
+             "section" : "chatroomsOverview"
+         }
+     );
+}
+
+jQuery(document).ready(function() {
+	
+    //  confirm delete dialog
+    jQuery("#delete-dialog<portlet:namespace/>").dialog({
+        autoOpen: false,
+        modal: true
+    });
+	
 	<c:if test="${chatRooms.size() == 0}" >jQuery('#chat-rooms-overview-help-content').show();</c:if>
 	<c:if test="${chatRooms.size() != 0}" >jQuery('#chat-rooms-overview-help-content').hide();</c:if>
 	
@@ -63,8 +89,15 @@ jQuery(function() {
 		jQuery("#<portlet:namespace/>chat-rooms").load("${editChatRoomURL}");
 	});
 	
-	function deleteHandleResponse() {
-		jQuery("#<portlet:namespace/>chat-rooms").load("${showChatRoomsURL}");
+	function deleteHandleResponse(responseText, statusText, xhr, form) {
+    	var response = getResponseTextInfo(responseText);
+        if (!response[0]) {
+        	showError(response[1]);                           
+        } else {
+        	showInfo(response[1]);                               
+            var responseBodyObj = jQuery.parseJSON(response[2]);
+            loadChatRooms();
+        }					
 	}
 	
 	jQuery(".btn-danger").click(function(e){
@@ -72,14 +105,30 @@ jQuery(function() {
 		jQuery(".alert-success").hide();
         jQuery(".alert-error").hide();
 		var chatRoomId = jQuery(this).attr("rel");
-		 
-		jQuery.ajax({
-			url: "${deleteChatRoomURL}"
-			,data: {chatRoomId: chatRoomId}
-			,success: function() {
-				deleteHandleResponse();
-			}
-		});
+
+        jQuery("#delete-dialog<portlet:namespace/>").dialog({
+            autoOpen: false,
+            modal: true,
+            buttons : {
+                "<fmt:message key="com.rcs.admin.chatroom.confirm.button.yes"/>" : function() {
+                    jQuery.ajax({
+                        url: '${deleteChatRoomURL}'
+                        ,type: 'POST'
+                        ,data: {chatRoomId: chatRoomId}
+            		    ,success : deleteHandleResponse
+                        ,failure: function(response){
+                            $(this).dialog("close");
+                        }
+                    });
+                    $(this).dialog("close");
+                },
+                "<fmt:message key="com.rcs.admin.chatroom.confirm.button.cancel" />" : function() {
+                    $(this).dialog("close");
+                }
+            }
+        });
+        jQuery("#delete-dialog<portlet:namespace/>").dialog("open");		
+
 	});
 	
 	jQuery(".btn-primary").click(function(e){
@@ -91,6 +140,7 @@ jQuery(function() {
 			"${editChatRoomURL}",{"chatRoomId": chatRoomId}	
 		);
 	});
+
 });	
   
 </script>

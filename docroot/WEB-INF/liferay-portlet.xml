@@ -1,34 +1,36 @@
 <?xml version="1.0"?>
-<!DOCTYPE liferay-portlet-app PUBLIC "-//Liferay//DTD Portlet Application 6.1.0//EN" "http://www.liferay.com/dtd/liferay-portlet-app_6_1_0.dtd">
+<!DOCTYPE liferay-portlet-app PUBLIC "-//Liferay//DTD Portlet Application 6.2.0//EN" "http://www.liferay.com/dtd/liferay-portlet-app_6_2_0.dtd">
 
 <liferay-portlet-app>
 	<portlet>
 		<portlet-name>VideoChat</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
+		<requires-namespaced-parameters>false</requires-namespaced-parameters>
 		<header-portlet-css>/js/bootstrap/css/bootstrap.css</header-portlet-css>
         <header-portlet-css>/js/bootstrap/css/bootstrap-responsive.css</header-portlet-css>
-        <header-portlet-css>/js/jquery-loadmask/jquery.loadmask.css</header-portlet-css>
+        <header-portlet-css>/js/jquery-loadmask/jquery.loadmask.css</header-portlet-css>        
         <header-portlet-css>/css/style.css</header-portlet-css>        
 		<header-portlet-css>/css/main.css</header-portlet-css>
-				                		
-		<header-portlet-javascript>http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js</header-portlet-javascript>
+		
+		<header-portlet-javascript>/js/jquery/jquery-1.7.1.min.js</header-portlet-javascript>
 		<header-portlet-javascript>/js/dragsort-0.5.1/jquery.dragsort-0.5.1.js</header-portlet-javascript>	
 		<header-portlet-javascript>/js/bootstrap/js/bootstrap.js</header-portlet-javascript>
 		<header-portlet-javascript>/js/jquery-loadmask/jquery.loadmask.min.js</header-portlet-javascript>
 		<header-portlet-javascript>/js/bootstrap/js/bootstrap-tooltip.js</header-portlet-javascript>                        	 		
+
 		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
 		<footer-portlet-javascript>/js/responseHandler.js</footer-portlet-javascript>
 		<css-class-wrapper>VideoChat-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
-		<portlet-name>chatRoomsAdmin</portlet-name>
+		<portlet-name>ChatRoomsAdmin</portlet-name>
 		<icon>/chatroom.png</icon>		
 		<!-- if is for the cPanel -->
-		<control-panel-entry-category>content</control-panel-entry-category>
-		<control-panel-entry-weight>1</control-panel-entry-weight>
+		<control-panel-entry-category>site_administration.configuration</control-panel-entry-category>
 		<!-- End if is for the cPanel -->
-		<instanceable>false</instanceable>		
+		<instanceable>false</instanceable>	
+		<requires-namespaced-parameters>false</requires-namespaced-parameters>
 		<header-portlet-css>/js/bootstrap/css/bootstrap.css</header-portlet-css>
         <header-portlet-css>/js/bootstrap/css/bootstrap-responsive.css</header-portlet-css>
         <header-portlet-css>/js/jquery-loadmask/jquery.loadmask.css</header-portlet-css>
@@ -36,21 +38,27 @@
         <header-portlet-css>/js/fancyapps-fancyBox/source/jquery.fancybox.css</header-portlet-css>        
 		<header-portlet-css>/css/main.css</header-portlet-css>
 		
-		<header-portlet-javascript>http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js</header-portlet-javascript>			
+		<header-portlet-javascript>/js/jquery/jquery-1.7.1.min.js</header-portlet-javascript>
 		<header-portlet-javascript>/js/bootstrap/js/bootstrap.js</header-portlet-javascript>
 		<header-portlet-javascript>/js/bootstrap/js/bootstrap-tooltip.js</header-portlet-javascript>
         <header-portlet-javascript>/js/jquery-loadmask/jquery.loadmask.min.js</header-portlet-javascript>        
-        <header-portlet-javascript>/js/bootstrap-tab.js</header-portlet-javascript>        
-        <footer-portlet-javascript>/js/jquery-validation-1.9.0/jquery.validate.min.js</footer-portlet-javascript>
+        <header-portlet-javascript>/js/bootstrap-tab.js</header-portlet-javascript>
+        <header-portlet-javascript>/js/jquery-ui-1.8.16.custom-redmond/js/jquery-ui-1.8.16.custom.min.js</header-portlet-javascript>        
+        
+		<footer-portlet-javascript>/js/jquery-validation-1.9.0/jquery.validate.min.js</footer-portlet-javascript>
         <footer-portlet-javascript>/js/jquery.form/jquery.form.js</footer-portlet-javascript>      
 	    <footer-portlet-javascript>/js/jquery.json-2.3/jquery.json-2.3.min.js</footer-portlet-javascript>
 	    <footer-portlet-javascript>/js/responseHandler.js</footer-portlet-javascript>
 		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
-		<css-class-wrapper>chatRoomsAdmin-portlet</css-class-wrapper>
+		<css-class-wrapper>ChatRoomsAdmin-portlet</css-class-wrapper>
 	</portlet>	
 	<role-mapper>
 		<role-name>administrator</role-name>
 		<role-link>Administrator</role-link>
+	</role-mapper>
+	<role-mapper>
+		<role-name>guest</role-name>
+		<role-link>Guest</role-link>
 	</role-mapper>	
 	<role-mapper>
 		<role-name>power-user</role-name>

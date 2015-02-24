@@ -18,18 +18,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.liferay.counter.service.CounterLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.persistence.UserUtil;
-import com.rcs.service.model.ChatRoom;
 import com.rcs.service.model.ChatRoomGroup;
-import com.rcs.service.service.ChatRoomGroupLocalServiceUtil;
 import com.rcs.service.service.base.ChatRoomGroupLocalServiceBaseImpl;
 import com.rcs.service.service.persistence.ChatRoomGroupPK;
-import com.rcs.service.service.persistence.ChatRoomGroupUtil;
 
 /**
  * The implementation of the chat room group local service.

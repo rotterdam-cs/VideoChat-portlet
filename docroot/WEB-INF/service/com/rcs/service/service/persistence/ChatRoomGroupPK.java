@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2012 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -20,7 +20,8 @@ import com.liferay.portal.kernel.util.StringPool;
 import java.io.Serializable;
 
 /**
- * @author flor
+ * @author Flor
+Ale
  */
 public class ChatRoomGroupPK implements Comparable<ChatRoomGroupPK>,
 	Serializable {
@@ -51,6 +52,7 @@ public class ChatRoomGroupPK implements Comparable<ChatRoomGroupPK>,
 		this.chatRoomGroupId = chatRoomGroupId;
 	}
 
+	@Override
 	public int compareTo(ChatRoomGroupPK pk) {
 		if (pk == null) {
 			return -1;
@@ -91,18 +93,15 @@ public class ChatRoomGroupPK implements Comparable<ChatRoomGroupPK>,
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj == null) {
+		if (this == obj) {
+			return true;
+		}
+
+		if (!(obj instanceof ChatRoomGroupPK)) {
 			return false;
 		}
 
-		ChatRoomGroupPK pk = null;
-
-		try {
-			pk = (ChatRoomGroupPK)obj;
-		}
-		catch (ClassCastException cce) {
-			return false;
-		}
+		ChatRoomGroupPK pk = (ChatRoomGroupPK)obj;
 
 		if ((chatRoomId == pk.chatRoomId) &&
 				(chatRoomGroupId == pk.chatRoomGroupId)) {

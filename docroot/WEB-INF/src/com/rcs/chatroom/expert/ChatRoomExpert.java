@@ -9,9 +9,8 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.opentok.api.API_Config;
-import com.opentok.api.OpenTokSDK;
-import com.opentok.api.OpenTokSession;
+import com.opentok.OpenTok;
+import com.opentok.Session;
 import com.rcs.common.PortalInstanceIdentifier;
 import com.rcs.common.ServiceActionResult;
 import com.rcs.service.model.ChatRoom;
@@ -46,13 +45,15 @@ public class ChatRoomExpert {
 					//@@ seguir acá, como paso el mensaje de error, modificar service action result
 					return resultupdate;
 				}
-				Configuration configuration = configurations.get(0);
+				//Configuration configuration = configurations.get(0);
+				
+				
 				// generate the session id to create a chat room in opentok server
-				OpenTokSDK sdk = new OpenTokSDK(Integer.parseInt(ConfigurationLocalServiceUtil.getApiKey()), ConfigurationLocalServiceUtil.getApiSecret());																			
+				OpenTok openTok = new OpenTok(Integer.parseInt(ConfigurationLocalServiceUtil.getApiKey()), ConfigurationLocalServiceUtil.getApiSecret());																			
 				//@@ chequear este error
 				String sessionId = "";
 				try {
-					OpenTokSession session =sdk.create_session();					
+					Session session =openTok.createSession();					
 					sessionId = session.getSessionId();
 				} catch(Exception e) {					
 					resultupdate = ServiceActionResult.buildFailure(null);
@@ -128,26 +129,7 @@ public class ChatRoomExpert {
 	 * @param chatRoomId
 	 * @return
 	 */
-	/*public ServiceActionResult<ChatRoom> deleteChatRoom(long chatRoomId) {
-		ServiceActionResult<ChatRoom> resultDelete = null;
-		try {
-			ChatRoomLocalServiceUtil.deleteChatRoom(chatRoomId);			
-			resultDelete = ServiceActionResult.buildSuccess(ChatRoom);
-		} catch (SystemException e) {
-			log.error("SystemException " + e.getMessage());
-			resultDelete = ServiceActionResult.buildFailure(null);
-		}catch (PortalException e) {
-			log.error("PortalException " + e.getMessage());
-			resultDelete = ServiceActionResult.buildFailure(null);
-		} catch (Exception e) {
-			log.error("Exception " + e.getMessage());
-			resultDelete = ServiceActionResult.buildFailure(null);
-		} 
-		return resultDelete;
-	}*/
-	//@@ cambiar esto!!
 	public boolean deleteChatRoom(long chatRoomId) {
-		ServiceActionResult<ChatRoom> resultDelete = null;
 		try {
 			ChatRoomLocalServiceUtil.deleteChatRoom(chatRoomId);			
 			return true;

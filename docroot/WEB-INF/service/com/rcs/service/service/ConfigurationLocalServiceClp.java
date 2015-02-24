@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2012 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -14,102 +14,140 @@
 
 package com.rcs.service.service;
 
-import com.liferay.portal.kernel.util.ClassLoaderProxy;
-import com.liferay.portal.kernel.util.MethodHandler;
-import com.liferay.portal.kernel.util.MethodKey;
+import com.liferay.portal.service.InvokableLocalService;
 
 /**
- * @author flor
+ * @author Flor|Ale
+ * @generated
  */
 public class ConfigurationLocalServiceClp implements ConfigurationLocalService {
-	public ConfigurationLocalServiceClp(ClassLoaderProxy classLoaderProxy) {
-		_classLoaderProxy = classLoaderProxy;
+	public ConfigurationLocalServiceClp(
+		InvokableLocalService invokableLocalService) {
+		_invokableLocalService = invokableLocalService;
 
-		_addConfigurationMethodKey0 = new MethodKey(_classLoaderProxy.getClassName(),
-				"addConfiguration", com.rcs.service.model.Configuration.class);
+		_methodName0 = "addConfiguration";
 
-		_createConfigurationMethodKey1 = new MethodKey(_classLoaderProxy.getClassName(),
-				"createConfiguration", java.lang.String.class);
+		_methodParameterTypes0 = new String[] {
+				"com.rcs.service.model.Configuration"
+			};
 
-		_deleteConfigurationMethodKey2 = new MethodKey(_classLoaderProxy.getClassName(),
-				"deleteConfiguration", java.lang.String.class);
+		_methodName1 = "createConfiguration";
 
-		_deleteConfigurationMethodKey3 = new MethodKey(_classLoaderProxy.getClassName(),
-				"deleteConfiguration", com.rcs.service.model.Configuration.class);
+		_methodParameterTypes1 = new String[] { "java.lang.String" };
 
-		_dynamicQueryMethodKey4 = new MethodKey(_classLoaderProxy.getClassName(),
-				"dynamicQuery",
-				com.liferay.portal.kernel.dao.orm.DynamicQuery.class);
+		_methodName2 = "deleteConfiguration";
 
-		_dynamicQueryMethodKey5 = new MethodKey(_classLoaderProxy.getClassName(),
-				"dynamicQuery",
-				com.liferay.portal.kernel.dao.orm.DynamicQuery.class,
-				int.class, int.class);
+		_methodParameterTypes2 = new String[] { "java.lang.String" };
 
-		_dynamicQueryMethodKey6 = new MethodKey(_classLoaderProxy.getClassName(),
-				"dynamicQuery",
-				com.liferay.portal.kernel.dao.orm.DynamicQuery.class,
-				int.class, int.class,
-				com.liferay.portal.kernel.util.OrderByComparator.class);
+		_methodName3 = "deleteConfiguration";
 
-		_dynamicQueryCountMethodKey7 = new MethodKey(_classLoaderProxy.getClassName(),
-				"dynamicQueryCount",
-				com.liferay.portal.kernel.dao.orm.DynamicQuery.class);
+		_methodParameterTypes3 = new String[] {
+				"com.rcs.service.model.Configuration"
+			};
 
-		_fetchConfigurationMethodKey8 = new MethodKey(_classLoaderProxy.getClassName(),
-				"fetchConfiguration", java.lang.String.class);
+		_methodName4 = "dynamicQuery";
 
-		_getConfigurationMethodKey9 = new MethodKey(_classLoaderProxy.getClassName(),
-				"getConfiguration", java.lang.String.class);
+		_methodParameterTypes4 = new String[] {  };
 
-		_getPersistedModelMethodKey10 = new MethodKey(_classLoaderProxy.getClassName(),
-				"getPersistedModel", java.io.Serializable.class);
+		_methodName5 = "dynamicQuery";
 
-		_getConfigurationsMethodKey11 = new MethodKey(_classLoaderProxy.getClassName(),
-				"getConfigurations", int.class, int.class);
+		_methodParameterTypes5 = new String[] {
+				"com.liferay.portal.kernel.dao.orm.DynamicQuery"
+			};
 
-		_getConfigurationsCountMethodKey12 = new MethodKey(_classLoaderProxy.getClassName(),
-				"getConfigurationsCount");
+		_methodName6 = "dynamicQuery";
 
-		_updateConfigurationMethodKey13 = new MethodKey(_classLoaderProxy.getClassName(),
-				"updateConfiguration", com.rcs.service.model.Configuration.class);
+		_methodParameterTypes6 = new String[] {
+				"com.liferay.portal.kernel.dao.orm.DynamicQuery", "int", "int"
+			};
 
-		_updateConfigurationMethodKey14 = new MethodKey(_classLoaderProxy.getClassName(),
-				"updateConfiguration",
-				com.rcs.service.model.Configuration.class, boolean.class);
+		_methodName7 = "dynamicQuery";
 
-		_getBeanIdentifierMethodKey15 = new MethodKey(_classLoaderProxy.getClassName(),
-				"getBeanIdentifier");
+		_methodParameterTypes7 = new String[] {
+				"com.liferay.portal.kernel.dao.orm.DynamicQuery", "int", "int",
+				"com.liferay.portal.kernel.util.OrderByComparator"
+			};
 
-		_setBeanIdentifierMethodKey16 = new MethodKey(_classLoaderProxy.getClassName(),
-				"setBeanIdentifier", java.lang.String.class);
+		_methodName8 = "dynamicQueryCount";
 
-		_updateConfigurationMethodKey17 = new MethodKey(_classLoaderProxy.getClassName(),
-				"updateConfiguration", long.class, java.lang.String.class,
-				java.lang.String.class, int.class);
+		_methodParameterTypes8 = new String[] {
+				"com.liferay.portal.kernel.dao.orm.DynamicQuery"
+			};
 
-		_isTestServerMethodKey18 = new MethodKey(_classLoaderProxy.getClassName(),
-				"isTestServer");
+		_methodName9 = "dynamicQueryCount";
 
-		_getApiKeyMethodKey19 = new MethodKey(_classLoaderProxy.getClassName(),
-				"getApiKey");
+		_methodParameterTypes9 = new String[] {
+				"com.liferay.portal.kernel.dao.orm.DynamicQuery",
+				"com.liferay.portal.kernel.dao.orm.Projection"
+			};
 
-		_getApiSecretMethodKey20 = new MethodKey(_classLoaderProxy.getClassName(),
-				"getApiSecret");
+		_methodName10 = "fetchConfiguration";
+
+		_methodParameterTypes10 = new String[] { "java.lang.String" };
+
+		_methodName11 = "getConfiguration";
+
+		_methodParameterTypes11 = new String[] { "java.lang.String" };
+
+		_methodName12 = "getPersistedModel";
+
+		_methodParameterTypes12 = new String[] { "java.io.Serializable" };
+
+		_methodName13 = "getConfigurations";
+
+		_methodParameterTypes13 = new String[] { "int", "int" };
+
+		_methodName14 = "getConfigurationsCount";
+
+		_methodParameterTypes14 = new String[] {  };
+
+		_methodName15 = "updateConfiguration";
+
+		_methodParameterTypes15 = new String[] {
+				"com.rcs.service.model.Configuration"
+			};
+
+		_methodName16 = "getBeanIdentifier";
+
+		_methodParameterTypes16 = new String[] {  };
+
+		_methodName17 = "setBeanIdentifier";
+
+		_methodParameterTypes17 = new String[] { "java.lang.String" };
+
+		_methodName19 = "updateConfiguration";
+
+		_methodParameterTypes19 = new String[] {
+				"long", "java.lang.String", "java.lang.String", "int"
+			};
+
+		_methodName20 = "isTestServer";
+
+		_methodParameterTypes20 = new String[] {  };
+
+		_methodName21 = "getApiKey";
+
+		_methodParameterTypes21 = new String[] {  };
+
+		_methodName22 = "getApiSecret";
+
+		_methodParameterTypes22 = new String[] {  };
 	}
 
+	@Override
 	public com.rcs.service.model.Configuration addConfiguration(
 		com.rcs.service.model.Configuration configuration)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		Object returnObj = null;
 
-		MethodHandler methodHandler = new MethodHandler(_addConfigurationMethodKey0,
-				ClpSerializer.translateInput(configuration));
-
 		try {
-			returnObj = _classLoaderProxy.invoke(methodHandler);
+			returnObj = _invokableLocalService.invokeMethod(_methodName0,
+					_methodParameterTypes0,
+					new Object[] { ClpSerializer.translateInput(configuration) });
 		}
 		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
 			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
 				throw (com.liferay.portal.kernel.exception.SystemException)t;
 			}
@@ -126,17 +164,19 @@ public class ConfigurationLocalServiceClp implements ConfigurationLocalService {
 		return (com.rcs.service.model.Configuration)ClpSerializer.translateOutput(returnObj);
 	}
 
+	@Override
 	public com.rcs.service.model.Configuration createConfiguration(
 		java.lang.String apiKey) {
 		Object returnObj = null;
 
-		MethodHandler methodHandler = new MethodHandler(_createConfigurationMethodKey1,
-				ClpSerializer.translateInput(apiKey));
-
 		try {
-			returnObj = _classLoaderProxy.invoke(methodHandler);
+			returnObj = _invokableLocalService.invokeMethod(_methodName1,
+					_methodParameterTypes1,
+					new Object[] { ClpSerializer.translateInput(apiKey) });
 		}
 		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
 			if (t instanceof RuntimeException) {
 				throw (RuntimeException)t;
 			}
@@ -149,16 +189,21 @@ public class ConfigurationLocalServiceClp implements ConfigurationLocalService {
 		return (com.rcs.service.model.Configuration)ClpSerializer.translateOutput(returnObj);
 	}
 
-	public void deleteConfiguration(java.lang.String apiKey)
+	@Override
+	public com.rcs.service.model.Configuration deleteConfiguration(
+		java.lang.String apiKey)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
-		MethodHandler methodHandler = new MethodHandler(_deleteConfigurationMethodKey2,
-				ClpSerializer.translateInput(apiKey));
+		Object returnObj = null;
 
 		try {
-			_classLoaderProxy.invoke(methodHandler);
+			returnObj = _invokableLocalService.invokeMethod(_methodName2,
+					_methodParameterTypes2,
+					new Object[] { ClpSerializer.translateInput(apiKey) });
 		}
 		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
 			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
 				throw (com.liferay.portal.kernel.exception.PortalException)t;
 			}
@@ -175,18 +220,24 @@ public class ConfigurationLocalServiceClp implements ConfigurationLocalService {
 					" is not a valid exception");
 			}
 		}
+
+		return (com.rcs.service.model.Configuration)ClpSerializer.translateOutput(returnObj);
 	}
 
-	public void deleteConfiguration(
+	@Override
+	public com.rcs.service.model.Configuration deleteConfiguration(
 		com.rcs.service.model.Configuration configuration)
 		throws com.liferay.portal.kernel.exception.SystemException {
-		MethodHandler methodHandler = new MethodHandler(_deleteConfigurationMethodKey3,
-				ClpSerializer.translateInput(configuration));
+		Object returnObj = null;
 
 		try {
-			_classLoaderProxy.invoke(methodHandler);
+			returnObj = _invokableLocalService.invokeMethod(_methodName3,
+					_methodParameterTypes3,
+					new Object[] { ClpSerializer.translateInput(configuration) });
 		}
 		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
 			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
 				throw (com.liferay.portal.kernel.exception.SystemException)t;
 			}
@@ -199,21 +250,48 @@ public class ConfigurationLocalServiceClp implements ConfigurationLocalService {
 					" is not a valid exception");
 			}
 		}
+
+		return (com.rcs.service.model.Configuration)ClpSerializer.translateOutput(returnObj);
 	}
 
+	@Override
+	public com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery() {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName4,
+					_methodParameterTypes4, new Object[] {  });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (com.liferay.portal.kernel.dao.orm.DynamicQuery)ClpSerializer.translateOutput(returnObj);
+	}
+
+	@Override
 	@SuppressWarnings("rawtypes")
 	public java.util.List dynamicQuery(
 		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		Object returnObj = null;
 
-		MethodHandler methodHandler = new MethodHandler(_dynamicQueryMethodKey4,
-				ClpSerializer.translateInput(dynamicQuery));
-
 		try {
-			returnObj = _classLoaderProxy.invoke(methodHandler);
+			returnObj = _invokableLocalService.invokeMethod(_methodName5,
+					_methodParameterTypes5,
+					new Object[] { ClpSerializer.translateInput(dynamicQuery) });
 		}
 		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
 			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
 				throw (com.liferay.portal.kernel.exception.SystemException)t;
 			}
@@ -230,19 +308,27 @@ public class ConfigurationLocalServiceClp implements ConfigurationLocalService {
 		return (java.util.List)ClpSerializer.translateOutput(returnObj);
 	}
 
+	@Override
 	@SuppressWarnings("rawtypes")
 	public java.util.List dynamicQuery(
 		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery, int start,
 		int end) throws com.liferay.portal.kernel.exception.SystemException {
 		Object returnObj = null;
 
-		MethodHandler methodHandler = new MethodHandler(_dynamicQueryMethodKey5,
-				ClpSerializer.translateInput(dynamicQuery), start, end);
-
 		try {
-			returnObj = _classLoaderProxy.invoke(methodHandler);
+			returnObj = _invokableLocalService.invokeMethod(_methodName6,
+					_methodParameterTypes6,
+					new Object[] {
+						ClpSerializer.translateInput(dynamicQuery),
+						
+					start,
+						
+					end
+					});
 		}
 		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
 			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
 				throw (com.liferay.portal.kernel.exception.SystemException)t;
 			}
@@ -259,6 +345,7 @@ public class ConfigurationLocalServiceClp implements ConfigurationLocalService {
 		return (java.util.List)ClpSerializer.translateOutput(returnObj);
 	}
 
+	@Override
 	@SuppressWarnings("rawtypes")
 	public java.util.List dynamicQuery(
 		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery, int start,
@@ -267,14 +354,22 @@ public class ConfigurationLocalServiceClp implements ConfigurationLocalService {
 		throws com.liferay.portal.kernel.exception.SystemException {
 		Object returnObj = null;
 
-		MethodHandler methodHandler = new MethodHandler(_dynamicQueryMethodKey6,
-				ClpSerializer.translateInput(dynamicQuery), start, end,
-				ClpSerializer.translateInput(orderByComparator));
-
 		try {
-			returnObj = _classLoaderProxy.invoke(methodHandler);
+			returnObj = _invokableLocalService.invokeMethod(_methodName7,
+					_methodParameterTypes7,
+					new Object[] {
+						ClpSerializer.translateInput(dynamicQuery),
+						
+					start,
+						
+					end,
+						
+					ClpSerializer.translateInput(orderByComparator)
+					});
 		}
 		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
 			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
 				throw (com.liferay.portal.kernel.exception.SystemException)t;
 			}
@@ -291,18 +386,20 @@ public class ConfigurationLocalServiceClp implements ConfigurationLocalService {
 		return (java.util.List)ClpSerializer.translateOutput(returnObj);
 	}
 
+	@Override
 	public long dynamicQueryCount(
 		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		Object returnObj = null;
 
-		MethodHandler methodHandler = new MethodHandler(_dynamicQueryCountMethodKey7,
-				ClpSerializer.translateInput(dynamicQuery));
-
 		try {
-			returnObj = _classLoaderProxy.invoke(methodHandler);
+			returnObj = _invokableLocalService.invokeMethod(_methodName8,
+					_methodParameterTypes8,
+					new Object[] { ClpSerializer.translateInput(dynamicQuery) });
 		}
 		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
 			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
 				throw (com.liferay.portal.kernel.exception.SystemException)t;
 			}
@@ -319,18 +416,55 @@ public class ConfigurationLocalServiceClp implements ConfigurationLocalService {
 		return ((Long)returnObj).longValue();
 	}
 
+	@Override
+	public long dynamicQueryCount(
+		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery,
+		com.liferay.portal.kernel.dao.orm.Projection projection)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName9,
+					_methodParameterTypes9,
+					new Object[] {
+						ClpSerializer.translateInput(dynamicQuery),
+						
+					ClpSerializer.translateInput(projection)
+					});
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
+				throw (com.liferay.portal.kernel.exception.SystemException)t;
+			}
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return ((Long)returnObj).longValue();
+	}
+
+	@Override
 	public com.rcs.service.model.Configuration fetchConfiguration(
 		java.lang.String apiKey)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		Object returnObj = null;
 
-		MethodHandler methodHandler = new MethodHandler(_fetchConfigurationMethodKey8,
-				ClpSerializer.translateInput(apiKey));
-
 		try {
-			returnObj = _classLoaderProxy.invoke(methodHandler);
+			returnObj = _invokableLocalService.invokeMethod(_methodName10,
+					_methodParameterTypes10,
+					new Object[] { ClpSerializer.translateInput(apiKey) });
 		}
 		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
 			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
 				throw (com.liferay.portal.kernel.exception.SystemException)t;
 			}
@@ -347,19 +481,21 @@ public class ConfigurationLocalServiceClp implements ConfigurationLocalService {
 		return (com.rcs.service.model.Configuration)ClpSerializer.translateOutput(returnObj);
 	}
 
+	@Override
 	public com.rcs.service.model.Configuration getConfiguration(
 		java.lang.String apiKey)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		Object returnObj = null;
 
-		MethodHandler methodHandler = new MethodHandler(_getConfigurationMethodKey9,
-				ClpSerializer.translateInput(apiKey));
-
 		try {
-			returnObj = _classLoaderProxy.invoke(methodHandler);
+			returnObj = _invokableLocalService.invokeMethod(_methodName11,
+					_methodParameterTypes11,
+					new Object[] { ClpSerializer.translateInput(apiKey) });
 		}
 		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
 			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
 				throw (com.liferay.portal.kernel.exception.PortalException)t;
 			}
@@ -380,19 +516,21 @@ public class ConfigurationLocalServiceClp implements ConfigurationLocalService {
 		return (com.rcs.service.model.Configuration)ClpSerializer.translateOutput(returnObj);
 	}
 
+	@Override
 	public com.liferay.portal.model.PersistedModel getPersistedModel(
 		java.io.Serializable primaryKeyObj)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		Object returnObj = null;
 
-		MethodHandler methodHandler = new MethodHandler(_getPersistedModelMethodKey10,
-				ClpSerializer.translateInput(primaryKeyObj));
-
 		try {
-			returnObj = _classLoaderProxy.invoke(methodHandler);
+			returnObj = _invokableLocalService.invokeMethod(_methodName12,
+					_methodParameterTypes12,
+					new Object[] { ClpSerializer.translateInput(primaryKeyObj) });
 		}
 		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
 			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
 				throw (com.liferay.portal.kernel.exception.PortalException)t;
 			}
@@ -413,18 +551,19 @@ public class ConfigurationLocalServiceClp implements ConfigurationLocalService {
 		return (com.liferay.portal.model.PersistedModel)ClpSerializer.translateOutput(returnObj);
 	}
 
+	@Override
 	public java.util.List<com.rcs.service.model.Configuration> getConfigurations(
 		int start, int end)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		Object returnObj = null;
 
-		MethodHandler methodHandler = new MethodHandler(_getConfigurationsMethodKey11,
-				start, end);
-
 		try {
-			returnObj = _classLoaderProxy.invoke(methodHandler);
+			returnObj = _invokableLocalService.invokeMethod(_methodName13,
+					_methodParameterTypes13, new Object[] { start, end });
 		}
 		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
 			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
 				throw (com.liferay.portal.kernel.exception.SystemException)t;
 			}
@@ -441,16 +580,18 @@ public class ConfigurationLocalServiceClp implements ConfigurationLocalService {
 		return (java.util.List<com.rcs.service.model.Configuration>)ClpSerializer.translateOutput(returnObj);
 	}
 
+	@Override
 	public int getConfigurationsCount()
 		throws com.liferay.portal.kernel.exception.SystemException {
 		Object returnObj = null;
 
-		MethodHandler methodHandler = new MethodHandler(_getConfigurationsCountMethodKey12);
-
 		try {
-			returnObj = _classLoaderProxy.invoke(methodHandler);
+			returnObj = _invokableLocalService.invokeMethod(_methodName14,
+					_methodParameterTypes14, new Object[] {  });
 		}
 		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
 			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
 				throw (com.liferay.portal.kernel.exception.SystemException)t;
 			}
@@ -467,18 +608,20 @@ public class ConfigurationLocalServiceClp implements ConfigurationLocalService {
 		return ((Integer)returnObj).intValue();
 	}
 
+	@Override
 	public com.rcs.service.model.Configuration updateConfiguration(
 		com.rcs.service.model.Configuration configuration)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		Object returnObj = null;
 
-		MethodHandler methodHandler = new MethodHandler(_updateConfigurationMethodKey13,
-				ClpSerializer.translateInput(configuration));
-
 		try {
-			returnObj = _classLoaderProxy.invoke(methodHandler);
+			returnObj = _invokableLocalService.invokeMethod(_methodName15,
+					_methodParameterTypes15,
+					new Object[] { ClpSerializer.translateInput(configuration) });
 		}
 		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
 			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
 				throw (com.liferay.portal.kernel.exception.SystemException)t;
 			}
@@ -495,43 +638,17 @@ public class ConfigurationLocalServiceClp implements ConfigurationLocalService {
 		return (com.rcs.service.model.Configuration)ClpSerializer.translateOutput(returnObj);
 	}
 
-	public com.rcs.service.model.Configuration updateConfiguration(
-		com.rcs.service.model.Configuration configuration, boolean merge)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		Object returnObj = null;
-
-		MethodHandler methodHandler = new MethodHandler(_updateConfigurationMethodKey14,
-				ClpSerializer.translateInput(configuration), merge);
-
-		try {
-			returnObj = _classLoaderProxy.invoke(methodHandler);
-		}
-		catch (Throwable t) {
-			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
-				throw (com.liferay.portal.kernel.exception.SystemException)t;
-			}
-
-			if (t instanceof RuntimeException) {
-				throw (RuntimeException)t;
-			}
-			else {
-				throw new RuntimeException(t.getClass().getName() +
-					" is not a valid exception");
-			}
-		}
-
-		return (com.rcs.service.model.Configuration)ClpSerializer.translateOutput(returnObj);
-	}
-
+	@Override
 	public java.lang.String getBeanIdentifier() {
 		Object returnObj = null;
 
-		MethodHandler methodHandler = new MethodHandler(_getBeanIdentifierMethodKey15);
-
 		try {
-			returnObj = _classLoaderProxy.invoke(methodHandler);
+			returnObj = _invokableLocalService.invokeMethod(_methodName16,
+					_methodParameterTypes16, new Object[] {  });
 		}
 		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
 			if (t instanceof RuntimeException) {
 				throw (RuntimeException)t;
 			}
@@ -544,14 +661,16 @@ public class ConfigurationLocalServiceClp implements ConfigurationLocalService {
 		return (java.lang.String)ClpSerializer.translateOutput(returnObj);
 	}
 
+	@Override
 	public void setBeanIdentifier(java.lang.String beanIdentifier) {
-		MethodHandler methodHandler = new MethodHandler(_setBeanIdentifierMethodKey16,
-				ClpSerializer.translateInput(beanIdentifier));
-
 		try {
-			_classLoaderProxy.invoke(methodHandler);
+			_invokableLocalService.invokeMethod(_methodName17,
+				_methodParameterTypes17,
+				new Object[] { ClpSerializer.translateInput(beanIdentifier) });
 		}
 		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
 			if (t instanceof RuntimeException) {
 				throw (RuntimeException)t;
 			}
@@ -562,6 +681,14 @@ public class ConfigurationLocalServiceClp implements ConfigurationLocalService {
 		}
 	}
 
+	@Override
+	public java.lang.Object invokeMethod(java.lang.String name,
+		java.lang.String[] parameterTypes, java.lang.Object[] arguments)
+		throws java.lang.Throwable {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
 	public com.rcs.service.model.Configuration updateConfiguration(
 		long userId, java.lang.String apiKey, java.lang.String apiSecret,
 		int type)
@@ -569,14 +696,22 @@ public class ConfigurationLocalServiceClp implements ConfigurationLocalService {
 			com.liferay.portal.kernel.exception.SystemException {
 		Object returnObj = null;
 
-		MethodHandler methodHandler = new MethodHandler(_updateConfigurationMethodKey17,
-				userId, ClpSerializer.translateInput(apiKey),
-				ClpSerializer.translateInput(apiSecret), type);
-
 		try {
-			returnObj = _classLoaderProxy.invoke(methodHandler);
+			returnObj = _invokableLocalService.invokeMethod(_methodName19,
+					_methodParameterTypes19,
+					new Object[] {
+						userId,
+						
+					ClpSerializer.translateInput(apiKey),
+						
+					ClpSerializer.translateInput(apiSecret),
+						
+					type
+					});
 		}
 		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
 			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
 				throw (com.liferay.portal.kernel.exception.PortalException)t;
 			}
@@ -597,15 +732,17 @@ public class ConfigurationLocalServiceClp implements ConfigurationLocalService {
 		return (com.rcs.service.model.Configuration)ClpSerializer.translateOutput(returnObj);
 	}
 
+	@Override
 	public boolean isTestServer() {
 		Object returnObj = null;
 
-		MethodHandler methodHandler = new MethodHandler(_isTestServerMethodKey18);
-
 		try {
-			returnObj = _classLoaderProxy.invoke(methodHandler);
+			returnObj = _invokableLocalService.invokeMethod(_methodName20,
+					_methodParameterTypes20, new Object[] {  });
 		}
 		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
 			if (t instanceof RuntimeException) {
 				throw (RuntimeException)t;
 			}
@@ -618,15 +755,17 @@ public class ConfigurationLocalServiceClp implements ConfigurationLocalService {
 		return ((Boolean)returnObj).booleanValue();
 	}
 
+	@Override
 	public java.lang.String getApiKey() {
 		Object returnObj = null;
 
-		MethodHandler methodHandler = new MethodHandler(_getApiKeyMethodKey19);
-
 		try {
-			returnObj = _classLoaderProxy.invoke(methodHandler);
+			returnObj = _invokableLocalService.invokeMethod(_methodName21,
+					_methodParameterTypes21, new Object[] {  });
 		}
 		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
 			if (t instanceof RuntimeException) {
 				throw (RuntimeException)t;
 			}
@@ -639,15 +778,17 @@ public class ConfigurationLocalServiceClp implements ConfigurationLocalService {
 		return (java.lang.String)ClpSerializer.translateOutput(returnObj);
 	}
 
+	@Override
 	public java.lang.String getApiSecret() {
 		Object returnObj = null;
 
-		MethodHandler methodHandler = new MethodHandler(_getApiSecretMethodKey20);
-
 		try {
-			returnObj = _classLoaderProxy.invoke(methodHandler);
+			returnObj = _invokableLocalService.invokeMethod(_methodName22,
+					_methodParameterTypes22, new Object[] {  });
 		}
 		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
 			if (t instanceof RuntimeException) {
 				throw (RuntimeException)t;
 			}
@@ -660,30 +801,49 @@ public class ConfigurationLocalServiceClp implements ConfigurationLocalService {
 		return (java.lang.String)ClpSerializer.translateOutput(returnObj);
 	}
 
-	public ClassLoaderProxy getClassLoaderProxy() {
-		return _classLoaderProxy;
-	}
-
-	private ClassLoaderProxy _classLoaderProxy;
-	private MethodKey _addConfigurationMethodKey0;
-	private MethodKey _createConfigurationMethodKey1;
-	private MethodKey _deleteConfigurationMethodKey2;
-	private MethodKey _deleteConfigurationMethodKey3;
-	private MethodKey _dynamicQueryMethodKey4;
-	private MethodKey _dynamicQueryMethodKey5;
-	private MethodKey _dynamicQueryMethodKey6;
-	private MethodKey _dynamicQueryCountMethodKey7;
-	private MethodKey _fetchConfigurationMethodKey8;
-	private MethodKey _getConfigurationMethodKey9;
-	private MethodKey _getPersistedModelMethodKey10;
-	private MethodKey _getConfigurationsMethodKey11;
-	private MethodKey _getConfigurationsCountMethodKey12;
-	private MethodKey _updateConfigurationMethodKey13;
-	private MethodKey _updateConfigurationMethodKey14;
-	private MethodKey _getBeanIdentifierMethodKey15;
-	private MethodKey _setBeanIdentifierMethodKey16;
-	private MethodKey _updateConfigurationMethodKey17;
-	private MethodKey _isTestServerMethodKey18;
-	private MethodKey _getApiKeyMethodKey19;
-	private MethodKey _getApiSecretMethodKey20;
+	private InvokableLocalService _invokableLocalService;
+	private String _methodName0;
+	private String[] _methodParameterTypes0;
+	private String _methodName1;
+	private String[] _methodParameterTypes1;
+	private String _methodName2;
+	private String[] _methodParameterTypes2;
+	private String _methodName3;
+	private String[] _methodParameterTypes3;
+	private String _methodName4;
+	private String[] _methodParameterTypes4;
+	private String _methodName5;
+	private String[] _methodParameterTypes5;
+	private String _methodName6;
+	private String[] _methodParameterTypes6;
+	private String _methodName7;
+	private String[] _methodParameterTypes7;
+	private String _methodName8;
+	private String[] _methodParameterTypes8;
+	private String _methodName9;
+	private String[] _methodParameterTypes9;
+	private String _methodName10;
+	private String[] _methodParameterTypes10;
+	private String _methodName11;
+	private String[] _methodParameterTypes11;
+	private String _methodName12;
+	private String[] _methodParameterTypes12;
+	private String _methodName13;
+	private String[] _methodParameterTypes13;
+	private String _methodName14;
+	private String[] _methodParameterTypes14;
+	private String _methodName15;
+	private String[] _methodParameterTypes15;
+	private String _methodName16;
+	private String[] _methodParameterTypes16;
+	private String _methodName17;
+	private String[] _methodParameterTypes17;
+	private String _methodName19;
+	private String[] _methodParameterTypes19;
+	private String _methodName20;
+	private String[] _methodParameterTypes20;
+	private String _methodName21;
+	private String[] _methodParameterTypes21;
+	private String _methodName22;
+	private String[] _methodParameterTypes22;
 }

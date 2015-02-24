@@ -26,7 +26,6 @@ import com.liferay.portal.model.User;
 import com.liferay.portal.service.persistence.UserUtil;
 import com.rcs.service.model.ChatRoom;
 import com.rcs.service.model.ChatRoomGroup;
-import com.rcs.service.service.ChatRoomLocalServiceUtil;
 import com.rcs.service.service.base.ChatRoomLocalServiceBaseImpl;
 
 /**

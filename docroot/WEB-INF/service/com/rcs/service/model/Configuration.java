@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2012 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -19,7 +19,7 @@ import com.liferay.portal.model.PersistedModel;
 /**
  * The extended model interface for the Configuration service. Represents a row in the &quot;VideoChat_Configuration&quot; database table, with each column mapped to a property of this class.
  *
- * @author flor
+ * @author Flor|Ale
  * @see ConfigurationModel
  * @see com.rcs.service.model.impl.ConfigurationImpl
  * @see com.rcs.service.model.impl.ConfigurationModelImpl
